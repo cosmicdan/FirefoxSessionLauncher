@@ -28,7 +28,7 @@ body {
 }
 
 #sessionSwapperGuiFooter {
-	
+
 }
 
 h1 {
@@ -51,14 +51,14 @@ h2 {
 	font-size: 14pt;
 }
 
-button {
-	background: black;
+div#sessionSwapperGuiSessionList div {
 	color: #eee;
 	font-family: "Segoe UI";
 	font-size: 11pt;
+	padding: 0.5em 0.6em;
 }
 
-button.sessionChoice {
+.sessionChoice {
 	width: 100%;
 	display: block; 
 	border: none;
@@ -67,11 +67,11 @@ button.sessionChoice {
 	cursor: pointer;
 	text-align: left;
 	
-	background: none;
+	background-color: black;
 	border: 0.15em #000 solid;
 }
 
-button.sessionChoice_hover {
+.sessionChoice_hover {
 	width: 100%;
 	display: block; 
 	border: none;

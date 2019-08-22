@@ -17,6 +17,7 @@
 	>
 	<title>Firefox SessionSwapper</title>
 	<link rel="stylesheet" type="text/css" href="SessionSwapper.css" />
+	<link rel="stylesheet" type="text/css" href="SessionSwapper.css" />
 	
 	
 	<script language="JavaScript">
@@ -59,7 +60,7 @@
 			
 			// footer
 			var guiFooter = document.getElementById("sessionSwapperGuiFooter");
-			guiFooter.innerHTML += "<button style='footerButton' onclick='openSessionDirectory()'>Open SessionSwapper dir</button>";
+			guiFooter.innerHTML += "<div style='footerButton' onclick='openSessionDirectory()'>Open SessionSwapper dir</div>";
 			
 			// setup hover stuff
 			var sessionChoiceButtons = document.getElementsByName('sessionChoice');
@@ -74,7 +75,15 @@
 		}
 
 		function addSessionButton(guiSessionList, sessionName) {
-			guiSessionList.innerHTML += "<button name='sessionChoice' class='sessionChoice' onclick=\"selectSession('" + sessionName + "')\">" + sessionName + "</button>";
+			guiSessionList.innerHTML += "<div name='sessionChoice' class='sessionChoice' onmouseover=\"sessionHover(this)\" onmouseout=\"sessionUnhover(this)\" onclick=\"selectSession('" + sessionName + "')\">" + sessionName + "</div>";
+		}
+		
+		function sessionHover(e) {
+			e.className = "sessionChoice_hover";
+		}
+		
+		function sessionUnhover(e) {
+			e.className = "sessionChoice";
 		}
 
 		function selectSession(sessionName) {
