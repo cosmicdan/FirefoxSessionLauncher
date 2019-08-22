@@ -14,21 +14,46 @@ body {
 }
 
 #sessionSwapperGuiHeader {
-	height: 11%;
 	margin: 4% 0 0 4%;
 }
 
 
+#sessionSwapperGuiSessionListContainer {
+	height: 60%;
+	padding: 0;
+	margin: 5% 0 0 0;
+}
+
 #sessionSwapperGuiSessionList {
 	overflow: auto;
-	height: 69%;
+	height: 100%;
 	width: 100%;
 	margin: 3% 0 3% 0;
-	padding: 0 4%;
+	padding: 1.5em 4%;
+	position:relative;
+}
+
+#sessionListFadeTop {
+	position: absolute;
+    z-index: 100;
+    height: 8%;
+	width: 100%;
+	overflow: hidden;
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#000000', endColorstr='#00000000',GradientType=0 );
+}
+
+#sessionListFadeBottom {
+	position: absolute;
+    z-index: 100;
+    right:0; bottom:16%; left:0;
+    height: 15%;
+	width: 100%;
+	overflow: hidden;
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00000000', endColorstr='#000000',GradientType=0 );
 }
 
 #sessionSwapperGuiFooter {
-
+	height: 20%;
 }
 
 h1 {

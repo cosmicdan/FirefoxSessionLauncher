@@ -44,7 +44,7 @@
 			var guiSessionList = document.getElementById("sessionSwapperGuiSessionList");
 			
 			// make the scrollbar look thinner by extending the width a little
-			guiSessionList.style.width = width + 8;
+			document.getElementById("sessionSwapperGuiSessionListContainer").style.width = width + 8;
 			
 			// always add _Default to the top
 			addSessionButton(guiSessionList, defaultSessionName);
@@ -102,7 +102,11 @@
 	<h1 class="title"><img src="SessionSwapper.png"</img>SessionSwapper</h1>
 	<h2>Select a session, or create a new one.</h2>
 </div>
-<div id="sessionSwapperGuiSessionList"></div>
+<div id="sessionSwapperGuiSessionListContainer">
+	<div id="sessionListFadeTop"></div>
+	<div id="sessionSwapperGuiSessionList"></div>
+	<div id="sessionListFadeBottom"></div>
+</div>
 <div id="sessionSwapperGuiFooter"></div>
 </BODY>
 </HTML>
