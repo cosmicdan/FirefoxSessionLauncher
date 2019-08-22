@@ -13,59 +13,12 @@ body {
 	border: 1px #777 solid;
 }
 
-#sessionSwapperGuiHeader {
-	margin: 4% 0 0 4%;
-}
-
-
-#sessionSwapperGuiSessionListContainer {
-	height: 60%;
-	padding: 0;
-	margin: 5% 0 0 0;
-}
-
-#sessionSwapperGuiSessionList {
-	overflow: auto;
-	height: 100%;
-	width: 100%;
-	margin: 3% 0 3% 0;
-	padding: 1.5em 4%;
-	position:relative;
-}
-
-#sessionListFadeTop {
-	position: absolute;
-    z-index: 100;
-    height: 8%;
-	width: 100%;
-	overflow: hidden;
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#000000', endColorstr='#00000000',GradientType=0 );
-}
-
-#sessionListFadeBottom {
-	position: absolute;
-    z-index: 100;
-    right:0; bottom:16%; left:0;
-    height: 15%;
-	width: 100%;
-	overflow: hidden;
-	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00000000', endColorstr='#000000',GradientType=0 );
-}
-
-#sessionSwapperGuiFooter {
-	height: 20%;
-}
-
 h1 {
-	margin: 0 0 0.6em 0;
+	margin: 0 0 18px 0;
 	font-family: "Segoe UI Light";
 	text-align: left;
 	font-size: 26pt;
 	line-height: 42px;
-}
-
-h1.title img {
-	margin: 0 20px -8px 0;
 }
 
 h2 {
@@ -76,39 +29,86 @@ h2 {
 	font-size: 14pt;
 }
 
-div#sessionSwapperGuiSessionList div {
+#sessionSwapperGuiHeader {
+	height: auto;
+	padding: 0;
+	margin: 0 0 8px 0;
+}
+
+#sessionSwapperGuiHeader h1.title img {
+	margin: 0 20px -8px 0;
+}
+
+
+#sessionSwapperGuiSessionListContainer {
+	/* height is set via JS */
+	height: 50%;
+	padding: 0;
+	margin: 0 0 0 0;
+}
+
+#sessionSwapperGuiSessionListContainer #sessionSwapperGuiSessionList {
+	overflow-x: hidden;
+	overflow-y: auto;
+	height: 100%;
+	width: 100%;
+	padding: 0 0 2em 4%;
+	margin: 0;
+	position:relative;
+}
+
+#sessionSwapperGuiSessionListContainer #sessionSwapperGuiSessionList div {
+	width: 100%;
+	display: block; 
+	border: none;
+	margin: 10px 4px 0 4px;
+	cursor: pointer;
+	text-align: left;
 	color: #eee;
 	font-family: "Segoe UI";
 	font-size: 11pt;
 	padding: 0.5em 0.6em;
 }
 
-.sessionChoice {
-	width: 100%;
-	display: block; 
-	border: none;
-	margin: 10px 4px 0 4px;
-	padding: 0 0 0 0.5em;
-	cursor: pointer;
-	text-align: left;
-	
+#sessionSwapperGuiSessionListContainer #sessionSwapperGuiSessionList div.sessionChoice {
 	background-color: black;
 	border: 0.15em #000 solid;
 }
 
-.sessionChoice_hover {
-	width: 100%;
-	display: block; 
-	border: none;
-	margin: 10px 4px 0 4px;
-	padding: 0 0 0 0.5em;
-	cursor: pointer;
-	text-align: left;
-	
+#sessionSwapperGuiSessionListContainer #sessionSwapperGuiSessionList div.sessionChoice_hover {
 	background-color: #555;
 	border: 0.15em #888 solid;
 }
 
-.footerButton {
-	border: 1px black solid;
+#sessionSwapperGuiSessionListContainer #sessionListFadeTop {
+	position: absolute;
+    z-index: 100;
+    height: 12%;
+	width: 100%;
+	left: 99999px;
+	overflow: hidden;
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#000000', endColorstr='#00000000',GradientType=0 );
+}
+
+#sessionSwapperGuiSessionListContainer #sessionListFadeBottom {
+	position: absolute;
+    z-index: 100;
+    right:0; left:0; bottom: 0;
+	/* bottom is re-set via JS */
+    height: 12%;
+	width: 100%;
+	overflow: hidden;
+	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00000000', endColorstr='#000000',GradientType=0 );
+}
+
+#sessionSwapperGuiFooter {
+	/* height total = 15% */
+	height: 15%;
+	margin: 0;
+	padding: 0;
+	
+}
+
+#sessionSwapperGuiFooter .footerButton {
+	
 }
