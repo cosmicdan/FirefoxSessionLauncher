@@ -135,7 +135,8 @@ GOTO :EOF
 :LOG
 echo %~1 >> "%LOGFILE%"
 IF "%DEBUG_ENABLED%"=="TRUE" (
-	echo %~1
+	:: Must quote this, otherwise stuff breaks if variable contains parenthesis or other batch special characters
+	echo "%~1"
 )
 GOTO :EOF
 
