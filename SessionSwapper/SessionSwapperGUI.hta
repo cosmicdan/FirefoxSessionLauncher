@@ -10,7 +10,7 @@
 		CONTEXTMENU="no"
 		INNERBORDER="no"
 		SCROLLFLAT="yes"
-		SCROLL="yes"
+		SCROLL="no"
 		SINGLEINSTANCE="yes"
 		SELECTION="no"
 		SYSMENU="no"
@@ -33,12 +33,17 @@
 		var defaultSessionName = ws.ExpandEnvironmentStrings("%DEFAULT_SESSION_NAME%");
 
 		window.onload = function() {
+			// size and center the window
 			var width = screen.width / 3.5;
 			var height = screen.height / 1.6;
 			window.resizeTo(width, height);
 			window.moveTo(((screen.width - width) / 2), ((screen.height - height) / 2));
+			
 			// start building html
 			var guiSessionList = document.getElementById("sessionSwapperGuiSessionList");
+			
+			// make the scrollbar look thinner by extending the width a little
+			guiSessionList.style.width = width + 8;
 			
 			// always add _Default to the top
 			addSessionButton(guiSessionList, defaultSessionName);
@@ -84,24 +89,12 @@
 </head>
 
 <body>
-<center><table>
-	<thead>
-		<tr><th>
-			<h1 class="title"><img src="SessionSwapper.png"</img>SessionSwapper</h1>
-			<h2>Select a session, or create a new one.</h2>
-		</th></tr>
-	</thead>
-	<tbody>
-		<tr align="center">
-			<td valign="top">
-				<div id="sessionSwapperGuiSessionList"></div>
-			</td>
-		</tr>
-	</tbody>
-	<tfoot>
-		<tr><td><div id="sessionSwapperGuiFooter"></div></td></tr>
-	</tfoot>
-</table></center>
+<div id="sessionSwapperGuiHeader">
+	<h1 class="title"><img src="SessionSwapper.png"</img>SessionSwapper</h1>
+	<h2>Select a session, or create a new one.</h2>
+</div>
+<div id="sessionSwapperGuiSessionList"></div>
+<div id="sessionSwapperGuiFooter"></div>
 </BODY>
 </HTML>
 

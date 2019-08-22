@@ -5,19 +5,30 @@
 body {
 	background: black;
 	color: white;
-	scrollbar-face-color: black;
-	scrollbar-arrow-color: white;
+	scrollbar-face-color: #999;
+	scrollbar-arrow-color: black;
 	scrollbar-track-color: black;
-	margin: 0.8em 1.2em;
+	margin: 0;
+	padding: 0;
 	border: 1px #777 solid;
 }
 
-table {
+#sessionSwapperGuiHeader {
+	height: 11%;
+	margin: 4% 0 0 4%;
+}
+
+
+#sessionSwapperGuiSessionList {
+	overflow: auto;
+	height: 69%;
 	width: 100%;
-	height: 100%;
-	border: none;
-	cellspacing: 0;
-	cellpadding: 0;
+	margin: 3% 0 3% 0;
+	padding: 0 4%;
+}
+
+#sessionSwapperGuiFooter {
+	
 }
 
 h1 {
@@ -40,10 +51,6 @@ h2 {
 	font-size: 14pt;
 }
 
-p {
-	
-}
-
 button {
 	background: black;
 	color: #eee;
@@ -51,15 +58,7 @@ button {
 	font-size: 11pt;
 }
 
-hr {
-	height: 1px;
-}
-
-sessionSwapperGuiSessionList {
-	
-}
-
-.sessionChoice {
+button.sessionChoice {
 	width: 100%;
 	display: block; 
 	border: none;
@@ -72,7 +71,7 @@ sessionSwapperGuiSessionList {
 	border: 0.15em #000 solid;
 }
 
-.sessionChoice_hover {
+button.sessionChoice_hover {
 	width: 100%;
 	display: block; 
 	border: none;
