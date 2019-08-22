@@ -1,5 +1,3 @@
-<!-- :: Batch section [for HTA/JavaScript]
-::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
 @ECHO OFF
 SETLOCAL ENABLEDELAYEDEXPANSION
 
@@ -79,7 +77,7 @@ IF EXIST "%SESSIONSWAPPER_DIR%\current_session" (
 
 :: Load the menu
 CALL :LOG "[#] Loading session menu ..."
-for /F "delims=" %%a in ('mshta.exe "%~F0"') DO SET "sessionChoice=%%a"
+for /F "delims=" %%a in ('mshta.exe "%~dp0\SessionSwapperGUI.hta"') DO SET "sessionChoice=%%a"
 
 :: Process menu result
 IF "!sessionChoice!"=="" (
@@ -140,98 +138,4 @@ IF "%DEBUG_ENABLED%"=="TRUE" (
 	echo %~1
 )
 GOTO :EOF
-
-::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::::
-
--->
-<!DOCTYPE html>
-<HTML>
-<HEAD>
-<HTA:APPLICATION 
-	APPLICATIONNAME="Firefox SessionSwapper"
-	VERSION="1.0.0"
-	icon="..\firefox.exe"
-	SCROLLFLAT="yes"
-	SCROLL="yes"
-	SYSMENU="no"
-	CAPTION="no"
-	BORDER="none"
-	SYSMENU="no"
-	SINGLEINSTANCE="yes"
-	SELECTION="no"
-	CONTEXTMENU="no"
-	INNERBORDER="no"
->
-<meta http-equiv="x-ua-compatible" content="ie=9">
-
-<title>Firefox SessionSwapper</title>
-<script language="JavaScript">
-
-var ws = new ActiveXObject("WScript.Shell");
-var fso = new ActiveXObject("Scripting.FileSystemObject");
-
-var sessionSwapperStorageDir = ws.ExpandEnvironmentStrings("%SESSIONSWAPPER_STORAGE%");
-var sessionSwapperStorageObj = fso.GetFolder(sessionSwapperStorageDir);
-var defaultSessionName = ws.ExpandEnvironmentStrings("%DEFAULT_SESSION_NAME%");
-
-window.onload = function() {
-	var width = screen.width / 3.5;
-    var height = screen.height / 1.6;
-    window.resizeTo(width, height);
-    window.moveTo(((screen.width - width) / 2), ((screen.height - height) / 2));
-	// start building html
-	var menuHtml = document.getElementById("SessionSwapperMenu");
-	
-	// always add _Default to the top
-	addSessionButton(menuHtml, defaultSessionName);
-	
-	// add any other sessions
-	var sessionEnumerator = new Enumerator(sessionSwapperStorageObj.SubFolders);
-	for (; !sessionEnumerator.atEnd(); sessionEnumerator.moveNext()) {
-		var sessionName = sessionEnumerator.item().Name;
-		if (sessionName != defaultSessionName) {
-			addSessionButton(menuHtml, sessionName);
-		}
-	}
-	
-	// footer stuff
-	menuHtml.innerHTML += "<hr></hr><button style='footerButton' onclick='openSessionDirectory()'>Open SessionSwapper dir</button>";
-	
-	// setup hover stuff
-	var sessionChoiceButtons = document.getElementsByName('sessionChoice');
-	for(var i = 0, j = sessionChoiceButtons.length; i < j; i++) {
-		// "Scales" them when hovered
-		sessionChoiceButtons[i].onmouseover = function() {
-			this.className = "sessionChoice_hover";
-		}
-		sessionChoiceButtons[i].onmouseout = function() {
-			this.className = "sessionChoice";
-		}
-	}
-}
-
-function addSessionButton(menuHtml, sessionName) {
-	menuHtml.innerHTML += "<button name='sessionChoice' class='sessionChoice' onclick=\"selectSession('" + sessionName + "')\">" + sessionName + "</button>";
-}
-
-function selectSession(sessionName) {
-	fso.GetStandardStream(1).WriteLine(sessionName)
-	window.close()
-}
-
-function openSessionDirectory() {
-	ws.run("Explorer /n, /e, " + sessionSwapperStorageDir);
-}
-	
-	
-	
-</script>
-<link rel="stylesheet" type="text/css" href="SessionSwapper.css" />
-</HEAD>
-<BODY>
-<center><table><tr align="center"><td valign="top">
-	<div id="SessionSwapperMenu"></div>
-</td></tr></table></center>
-</BODY>
-</HTML>
 
