@@ -1,0 +1,55 @@
+body {
+	background: black;
+	color: #eee;
+	scrollbar-face-color: black;
+	scrollbar-arrow-color: white;
+	scrollbar-track-color: black;
+}
+
+table {
+	width: 100%;
+	height: 100%;
+	border: none;
+	cellspacing: 0;
+	cellpadding: 0;
+}
+
+button {
+	background: black;
+	color: #eee;
+}
+
+hr {
+	height: 1px;
+}
+
+
+.sessionChoice {
+	width: 100%;
+	display: block; 
+	border: none;
+	border-left: 1px #aaa solid;
+	margin: 10px 4px 0 4px;
+	padding: 0 0 0 0.5em;
+	cursor: pointer;
+	text-align: left;
+}
+
+.sessionChoice_hover {
+	width: 100%;
+	display: block; 
+	background: none;
+	border: none;
+	
+	margin: 10px 4px 0 4px;
+	padding: 0 0 0 0.5em;
+	cursor: pointer;
+	text-align: left;
+	
+	font-weight: bold;
+	border-left: 3px #aaa solid;
+}
+
+.footerButton {
+	border: 1px black solid;
+}

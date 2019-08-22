@@ -1,0 +1,17 @@
+# ignore everything with exceptions
+/?*
+/?*/
+
+# common stuff
+!/.gitignore
+!/README.md
+!/SessionSwapper/
+!/config.js
+
+# config-prefs.js too, but nothing else in that tree
+!/defaults/
+/defaults/*
+!/defaults/pref/
+/defaults/pref/*
+!/defaults/pref/config-prefs.js
+
