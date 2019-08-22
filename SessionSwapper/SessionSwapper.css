@@ -1,9 +1,15 @@
+/*
+	Font guidelines: https://msdn.microsoft.com/en-us/windows/desktop/hh700394
+*/
+
 body {
 	background: black;
-	color: #eee;
+	color: white;
 	scrollbar-face-color: black;
 	scrollbar-arrow-color: white;
 	scrollbar-track-color: black;
+	margin: 0.8em 1.2em;
+	border: 1px #777 solid;
 }
 
 table {
@@ -14,40 +20,69 @@ table {
 	cellpadding: 0;
 }
 
+h1 {
+	margin: 0 0 0.6em 0;
+	font-family: "Segoe UI Light";
+	text-align: left;
+	font-size: 26pt;
+	line-height: 42px;
+}
+
+h1.title img {
+	margin: 0 20px -8px 0;
+}
+
+h2 {
+	padding: 0;
+	margin: 0;
+	font-family: "Segoe UI Semibold";
+	text-align: left;
+	font-size: 14pt;
+}
+
+p {
+	
+}
+
 button {
 	background: black;
 	color: #eee;
+	font-family: "Segoe UI";
+	font-size: 11pt;
 }
 
 hr {
 	height: 1px;
 }
 
+sessionSwapperGuiSessionList {
+	
+}
 
 .sessionChoice {
 	width: 100%;
 	display: block; 
 	border: none;
-	border-left: 1px #aaa solid;
 	margin: 10px 4px 0 4px;
 	padding: 0 0 0 0.5em;
 	cursor: pointer;
 	text-align: left;
+	
+	background: none;
+	border: 0.15em #000 solid;
 }
 
 .sessionChoice_hover {
 	width: 100%;
 	display: block; 
-	background: none;
 	border: none;
-	
 	margin: 10px 4px 0 4px;
 	padding: 0 0 0 0.5em;
 	cursor: pointer;
 	text-align: left;
 	
-	font-weight: bold;
-	border-left: 3px #aaa solid;
+	background-color: #555;
+	border: 0.15em #888 solid;
 }
 
 .footerButton {

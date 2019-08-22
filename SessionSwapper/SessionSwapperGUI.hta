@@ -1,22 +1,19 @@
-<!DOCTYPE html>
 <html>
 <head>
-	<meta http-equiv="x-ua-compatible" content="IE=edge" />
 	<HTA:APPLICATION 
 		APPLICATIONNAME="Firefox SessionSwapper"
-		ID="FirefoxSessionSwapper"
 		VERSION="1.0.0"
-		icon="..\firefox.exe"
-		SCROLLFLAT="yes"
-		SCROLL="yes"
-		SYSMENU="no"
-		CAPTION="no"
+		ID="FirefoxSessionSwapper"
+		ICON="SessionSwapper.ico"
 		BORDER="none"
-		SYSMENU="no"
-		SINGLEINSTANCE="yes"
-		SELECTION="no"
+		CAPTION="no"
 		CONTEXTMENU="no"
 		INNERBORDER="no"
+		SCROLLFLAT="yes"
+		SCROLL="yes"
+		SINGLEINSTANCE="yes"
+		SELECTION="no"
+		SYSMENU="no"
 	>
 	<title>Firefox SessionSwapper</title>
 	<link rel="stylesheet" type="text/css" href="SessionSwapper.css" />
@@ -41,22 +38,23 @@
 			window.resizeTo(width, height);
 			window.moveTo(((screen.width - width) / 2), ((screen.height - height) / 2));
 			// start building html
-			var menuHtml = document.getElementById("SessionSwapperMenu");
+			var guiSessionList = document.getElementById("sessionSwapperGuiSessionList");
 			
 			// always add _Default to the top
-			addSessionButton(menuHtml, defaultSessionName);
+			addSessionButton(guiSessionList, defaultSessionName);
 			
 			// add any other sessions
 			var sessionEnumerator = new Enumerator(sessionSwapperStorageObj.SubFolders);
 			for (; !sessionEnumerator.atEnd(); sessionEnumerator.moveNext()) {
 				var sessionName = sessionEnumerator.item().Name;
 				if (sessionName != defaultSessionName) {
-					addSessionButton(menuHtml, sessionName);
+					addSessionButton(guiSessionList, sessionName);
 				}
 			}
 			
-			// footer stuff
-			menuHtml.innerHTML += "<hr></hr><button style='footerButton' onclick='openSessionDirectory()'>Open SessionSwapper dir</button>";
+			// footer
+			var guiFooter = document.getElementById("sessionSwapperGuiFooter");
+			guiFooter.innerHTML += "<button style='footerButton' onclick='openSessionDirectory()'>Open SessionSwapper dir</button>";
 			
 			// setup hover stuff
 			var sessionChoiceButtons = document.getElementsByName('sessionChoice');
@@ -70,8 +68,8 @@
 			}
 		}
 
-		function addSessionButton(menuHtml, sessionName) {
-			menuHtml.innerHTML += "<button name='sessionChoice' class='sessionChoice' onclick=\"selectSession('" + sessionName + "')\">" + sessionName + "</button>";
+		function addSessionButton(guiSessionList, sessionName) {
+			guiSessionList.innerHTML += "<button name='sessionChoice' class='sessionChoice' onclick=\"selectSession('" + sessionName + "')\">" + sessionName + "</button>";
 		}
 
 		function selectSession(sessionName) {
@@ -84,13 +82,25 @@
 		}
 	</script>
 </head>
+
 <body>
 <center><table>
-<tr align="center">
-	<td valign="top">
-		<div id="SessionSwapperMenu"></div>
-	</td>
-</tr>
+	<thead>
+		<tr><th>
+			<h1 class="title"><img src="SessionSwapper.png"</img>SessionSwapper</h1>
+			<h2>Select a session, or create a new one.</h2>
+		</th></tr>
+	</thead>
+	<tbody>
+		<tr align="center">
+			<td valign="top">
+				<div id="sessionSwapperGuiSessionList"></div>
+			</td>
+		</tr>
+	</tbody>
+	<tfoot>
+		<tr><td><div id="sessionSwapperGuiFooter"></div></td></tr>
+	</tfoot>
 </table></center>
 </BODY>
 </HTML>
