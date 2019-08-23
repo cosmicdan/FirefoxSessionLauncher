@@ -14,15 +14,11 @@ var lastSessionName = ws.ExpandEnvironmentStrings("%LAST_SESSION_NAME%");
 window.onload = function() {
 	// size and center the window
 	var guiWidth = screen.width / 3.5;
-	var guiHeight = screen.height / 1.6;
+	var guiHeight = screen.height / 1.4;
 	window.resizeTo(guiWidth, guiHeight);
 	window.moveTo(((screen.width - guiWidth) / 2), ((screen.height - guiHeight) / 2));
 	
 	var guiSessionList = document.getElementById("sessionLauncherGuiSessionList");
-	
-	// make the scrollbar look thinner by extending the width a little
-	var guiSessionListContainer = document.getElementById("sessionLauncherGuiSessionListContainer");
-	guiSessionListContainer.style.width = guiWidth + 8;
 	
 	// fade handling
 	var guiListFadeTop = document.getElementById("sessionListFadeTop");
@@ -34,13 +30,16 @@ window.onload = function() {
 		}
 	};
 	
-	// set previous session
+	// check if previous session still exists
+	// set previous session display
 	var guiSessionPrev = document.getElementById("sessionLauncherGuiSessionPrevious");
-	if (lastSessionName === "[N\\\\A]") {
-		guiSessionPrev.innerHTML = "<div name='sessionChoice' class='sessionChoice' style=\"font-style:italic;cursor:default;\">None</div>";
+	guiSessionPrev.innerHTML = "<div>";
+	if (lastSessionName === "[N\\\\A]" || !fso.FolderExists(sessionLauncherStorageDir + "\\" + lastSessionName)) {
+		guiSessionPrev.innerHTML += "<span name='sessionChoice' class='sessionChoice' style=\"font-style:italic;cursor:default;\">None</span>";
 	} else {
-		guiSessionPrev.innerHTML = "<div name='sessionChoice' class='sessionChoice' onmouseover=\"sessionHover(this)\" onmouseout=\"sessionUnhover(this)\" onclick=\"selectSession('" + lastSessionName + "')\">" + lastSessionName + "</div>";
+		guiSessionPrev.innerHTML += "<span name='sessionChoice' class='sessionChoice' onmouseover=\"sessionHover(this)\" onmouseout=\"sessionUnhover(this)\" onclick=\"selectSession('" + lastSessionName + "')\">" + lastSessionName + "</span>";
 	}
+	guiSessionPrev.innerHTML += "</div>";
 	
 	// add any other sessions
 	// always add _Default to the top though
@@ -56,6 +55,12 @@ window.onload = function() {
 	// footer buttons
 	var guiFooter = document.getElementById("sessionLauncherGuiFooter");
 	guiFooter.innerHTML += "<div class='button' onmouseover=\"buttonHover(this)\" onmouseout=\"buttonUnhover(this)\" onclick='newSession()'>New...</div>";
+	
+	// make the scrollbar look thinner by extending the width a little
+	var guiSessionListContainer = document.getElementById("sessionLauncherGuiSessionListContainer");
+	guiSessionListContainer.style.width = guiWidth + 8;
+	// also enlarge guiSessionPrev by same so they're aligned
+	guiSessionPrev.style.width = guiWidth + 8;
 	
 	// setup hover stuff
 	var sessionChoiceButtons = document.getElementsByName('sessionChoice');
@@ -78,7 +83,7 @@ window.onload = function() {
 }
 
 function addSessionButton(guiSessionList, sessionName) {
-	guiSessionList.innerHTML += "<div name='sessionChoice' class='sessionChoice' onmouseover=\"sessionHover(this)\" onmouseout=\"sessionUnhover(this)\" onclick=\"selectSession('" + sessionName + "')\">" + sessionName + "</div>";
+	guiSessionList.innerHTML += "<div><span name='sessionChoice' class='sessionChoice' onmouseover=\"sessionHover(this)\" onmouseout=\"sessionUnhover(this)\" onclick=\"selectSession('" + sessionName + "')\">" + sessionName + "</span></div>"
 }
 
 function sessionHover(e) {
@@ -119,7 +124,8 @@ function newSession() {
 		fso.CreateFolder(newSessionPath);
 	}
 	catch (err) {
-		alert("Error creating session folder. Either the folder name is invalid (special characters) or a security exception occured.");
+		alert("Error creating session folder. Either the folder name is" + "\n" + 
+			"invalid (special characters) or a security exception occured.");
 	}
 	location.reload(true);
 }
@@ -132,7 +138,7 @@ function openSessionDirectory() {
 
 /* offsetHeight doesn't include margins so we need this */
 function getElementHeight(eId) {
-    var e = document.getElementById(eId);
+	var e = document.getElementById(eId);
 	var style = e.currentStyle
 	
 	var marginTop = 0;
@@ -145,5 +151,5 @@ function getElementHeight(eId) {
 	if (style.marginBottom != "") {
 		marginBottom = parseInt(style.marginBottom, 10);
 	}
-    return e.offsetHeight + marginTop + marginBottom;
+	return e.offsetHeight + marginTop + marginBottom;
 }

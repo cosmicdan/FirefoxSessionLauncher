@@ -10,11 +10,21 @@ body {
 	scrollbar-track-color: black;
 	margin: 0;
 	padding: 0;
-	border: 1px #777 solid;
+	border: 1px #373737 solid;
+}
+
+div {
+	margin: 0;
+	padding: 0;
+}
+
+span {
+	margin: 0;
+	padding: 0;
 }
 
 h1 {
-	margin: 0 0 18px 0;
+	margin: 0 0 0.6em 4%;
 	font-family: "Segoe UI Light";
 	text-align: left;
 	font-size: 26pt;
@@ -23,7 +33,7 @@ h1 {
 
 h2 {
 	padding: 0;
-	margin: 0;
+	margin: 0 0 0 4%;
 	font-family: "Segoe UI Semibold";
 	text-align: left;
 	font-size: 14pt;
@@ -31,8 +41,9 @@ h2 {
 
 #sessionLauncherGuiHeader {
 	height: auto;
-	padding: 5% 6% 0 6%;
+	padding: 5% 0 0 0;
 	margin: 0 0 8px 0;
+	width: 100%;
 }
 
 #sessionLauncherGuiHeader h1.title img {
@@ -44,14 +55,18 @@ h2 {
 }
 
 #sessionLauncherGuiSessionPrevious {
-	
+	height: 100%;
+	width: 100%;
+	padding: 0 6% 0 6%;
+	margin: 0;
 }
 
 #sessionLauncherGuiSessionListContainer {
-	/* height is set via JS */
+	/* height is updated via JS */
 	height: 50%;
-	padding: 0 0;
-	margin: 0 0 0 0;
+	width: 100%;
+	padding: 0;
+	margin: 0;
 }
 
 #sessionLauncherGuiSessionListContainer #sessionLauncherGuiSessionList {
@@ -60,14 +75,13 @@ h2 {
 	height: 100%;
 	width: 100%;
 	/* NB: side padding is 3% to match alignment with sessionLauncherGuiHeader*/
-	padding: 0 6% 2em 6%;
+	padding: 0 6% 4em 6%;
 	margin: 0;
 	position:relative;
 }
 
-div.sessionChoice, div.sessionChoice_hover {
-	width: 100%;
-	display: block; 
+span.sessionChoice, span.sessionChoice_hover {
+	width: 80%;
 	border: none;
 	margin: 10px 4px 0 4px;
 	cursor: pointer;
@@ -75,24 +89,21 @@ div.sessionChoice, div.sessionChoice_hover {
 	color: #eee;
 	font-family: "Segoe UI";
 	font-size: 10pt;
-	padding: 0.3em 1em;
-	border: 0.15em #000 solid;
+	padding: 0.45em 1em;
 }
 
-div.sessionChoice {
+span.sessionChoice {
 	background-color: black;
-	border-color: #000;
 }
 
-div.sessionChoice_hover {
-	background-color: #555;
-	border-color: #888;
+span.sessionChoice_hover {
+	background-color: #373737;
 }
-
+	
 #sessionLauncherGuiSessionListContainer #sessionListFadeTop {
 	position: absolute;
-    z-index: 100;
-    height: 15%;
+	z-index: 100;
+	height: 15%;
 	width: 100%;
 	left: 99999px;
 	overflow: hidden;
@@ -101,10 +112,10 @@ div.sessionChoice_hover {
 
 #sessionLauncherGuiSessionListContainer #sessionListFadeBottom {
 	position: absolute;
-    z-index: 100;
-    right:0; left:0; bottom: 0;
+	z-index: 100;
+	right:0; left:0; bottom: 0;
 	/* bottom is re-set via JS */
-    height: 15%;
+	height: 15%;
 	width: 100%;
 	overflow: hidden;
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00000000', endColorstr='#000000',GradientType=0 );
@@ -123,16 +134,13 @@ div.sessionChoice_hover {
 	font-family: "Segoe UI";
 	background-color: #373737;
 	line-height: 1.8em;
+	padding: 5px 22px;
 }
 
 .button {
-	padding: 8px 26px;
-	margin: 0;
-	border: 1px #111 solid;
+	border: 2px #373737 solid;
 }
 
 .button_hover {
-	padding: 6px 24px;
-	margin: 1px;
 	border: 2px #999 solid;
 }
