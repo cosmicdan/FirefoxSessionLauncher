@@ -4,11 +4,11 @@ SETLOCAL ENABLEDELAYEDEXPANSION
 :: Get profile path
 SET MOZ_PROFILE_PATH=%MOZ_CRASHREPORTER_EVENTS_DIRECTORY:\crashes\events=%
 ::SET MOZ_PROFILE_PATH=C:\Users\CosmicDan\AppData\Roaming\Mozilla\Firefox\Profiles\a80gphfl.default-esr
-SET SESSIONSWAPPER_DIR=%MOZ_PROFILE_PATH%\SessionSwapper
-SET SESSIONSWAPPER_STORAGE=%SESSIONSWAPPER_DIR%\sessions
+SET SESSIONLAUNCHER_DIR=%MOZ_PROFILE_PATH%\SessionLauncher
+SET SESSIONLAUNCHER_STORAGE=%SESSIONLAUNCHER_DIR%\sessions
 
 :: Logging
-SET LOGFILE=%SESSIONSWAPPER_DIR%\last.log
+SET LOGFILE=%SESSIONLAUNCHER_DIR%\last.log
 DEL /F /Q "%LOGFILE%">nul 2>&1
 
 :: Check debug mode
@@ -18,10 +18,10 @@ IF "%~1"=="debugMode" (
 	CALL :LOG "[X] Debug mode enabled - console visible."
 )
 
-:: Create SessionSwapper folder[s] if required
-IF NOT EXIST "%SESSIONSWAPPER_STORAGE%\" (
-	MKDIR "%SESSIONSWAPPER_STORAGE%\"
-	CALL :LOG "[i] Created directory- %SESSIONSWAPPER_STORAGE%\"
+:: Create SessionLauncher folder[s] if required
+IF NOT EXIST "%SESSIONLAUNCHER_STORAGE%\" (
+	MKDIR "%SESSIONLAUNCHER_STORAGE%\"
+	CALL :LOG "[i] Created directory- %SESSIONLAUNCHER_STORAGE%\"
 )
 
 SET DEFAULT_SESSION_NAME=_Default
@@ -29,22 +29,22 @@ CALL :LOG "[i] Default session name- %DEFAULT_SESSION_NAME%"
 
 :: Create default session if required [we need at least one session]
 
-IF NOT EXIST "%SESSIONSWAPPER_STORAGE%\%DEFAULT_SESSION_NAME%" (
-	MKDIR "%SESSIONSWAPPER_STORAGE%\%DEFAULT_SESSION_NAME%"
-	CALL :LOG "[i] Created directory- %SESSIONSWAPPER_STORAGE%\%DEFAULT_SESSION_NAME%\"
+IF NOT EXIST "%SESSIONLAUNCHER_STORAGE%\%DEFAULT_SESSION_NAME%" (
+	MKDIR "%SESSIONLAUNCHER_STORAGE%\%DEFAULT_SESSION_NAME%"
+	CALL :LOG "[i] Created directory- %SESSIONLAUNCHER_STORAGE%\%DEFAULT_SESSION_NAME%\"
 )
 
 SET LAST_SESSION_NAME=[N\\A]
 
 :: Check for previous session files and store them back to their right location, if possible
-IF EXIST "%SESSIONSWAPPER_DIR%\current_session" (
-	:: First check if current_session exists [flag written by previous run of SessionSwapper]
-	FOR /F "delims=" %%x IN (%SESSIONSWAPPER_DIR%\current_session) DO SET LAST_SESSION=%%x
+IF EXIST "%SESSIONLAUNCHER_DIR%\current_session" (
+	:: First check if current_session exists [flag written by previous run of SessionLauncher]
+	FOR /F "delims=" %%x IN (%SESSIONLAUNCHER_DIR%\current_session) DO SET LAST_SESSION=%%x
 	SET LAST_SESSION_NAME=!LAST_SESSION!
 	CALL :LOG "[i] Previous session found: !LAST_SESSION!"
-	IF EXIST "%SESSIONSWAPPER_STORAGE%\!LAST_SESSION!\" (
+	IF EXIST "%SESSIONLAUNCHER_STORAGE%\!LAST_SESSION!\" (
 		:: Move the current sessionstore back to the last-active session folder. TODO: Only automatically overwrite if newer, otherwise prompt
-		MOVE /Y "%MOZ_PROFILE_PATH%\sessionstore.jsonlz4" "%SESSIONSWAPPER_STORAGE%\!LAST_SESSION!\">nul
+		MOVE /Y "%MOZ_PROFILE_PATH%\sessionstore.jsonlz4" "%SESSIONLAUNCHER_STORAGE%\!LAST_SESSION!\">nul
 		CALL :LOG "    [i] sessionstore.jsonlz4 transferred back to !LAST_SESSION!"
 	) ELSE (
 		:: Assume stale session
@@ -60,8 +60,8 @@ IF EXIST "%SESSIONSWAPPER_DIR%\current_session" (
 	) ELSE (
 		::TODO: Untracked session handling
 		CALL :LOG "    [i] current_session is populated but sessionstore-backups is not a symlink. Assuming Firefox derped symlinks so manually moving back."
-		RD /S /Q "%SESSIONSWAPPER_STORAGE%\!LAST_SESSION!\sessionstore-backups">nul
-		MOVE "%MOZ_PROFILE_PATH%\sessionstore-backups" "%SESSIONSWAPPER_STORAGE%\!LAST_SESSION!\sessionstore-backups">nul
+		RD /S /Q "%SESSIONLAUNCHER_STORAGE%\!LAST_SESSION!\sessionstore-backups">nul
+		MOVE "%MOZ_PROFILE_PATH%\sessionstore-backups" "%SESSIONLAUNCHER_STORAGE%\!LAST_SESSION!\sessionstore-backups">nul
 	)
 ) ELSE (
 	:: No last session, so just erase the current session
@@ -78,7 +78,7 @@ IF EXIST "%SESSIONSWAPPER_DIR%\current_session" (
 
 :: Load the menu
 CALL :LOG "[#] Loading session menu ..."
-for /F "delims=" %%a in ('mshta.exe "%~dp0\SessionSwapperGUI.hta"') DO SET "sessionChoice=%%a"
+for /F "delims=" %%a in ('mshta.exe "%~dp0\SessionLauncherGUI.hta"') DO SET "sessionChoice=%%a"
 
 :: Process menu result
 IF "!sessionChoice!"=="" (
@@ -87,7 +87,7 @@ IF "!sessionChoice!"=="" (
 ) ELSE (
 	CALL :LOG "[i] Loading !sessionChoice! ..."
 )
-SET SESSION_SELECTED_DIR=%SESSIONSWAPPER_STORAGE%\!sessionChoice!
+SET SESSION_SELECTED_DIR=%SESSIONLAUNCHER_STORAGE%\!sessionChoice!
 IF NOT EXIST "%SESSION_SELECTED_DIR%\" (
 	:: TODO: show a serious error. Somehow the menu showed a session folder that doesn't exist on disk.
 	CALL :LOG "ERROR - todo [should not happen]"
@@ -111,17 +111,17 @@ MKLINK /D "%MOZ_PROFILE_PATH%\sessionstore-backups" "%SESSION_SELECTED_DIR%\sess
 CALL :LOG "    [i] Created sessionstore-backups\ symbolic link"
 
 :: Write-out current_session
-ECHO !sessionChoice!> "%SESSIONSWAPPER_DIR%\current_session"
+ECHO !sessionChoice!> "%SESSIONLAUNCHER_DIR%\current_session"
 
 
 ::IF "%DEBUG_ENABLED%"=="TRUE" (
 ::	CALL :LOG "[X] Calling ACTIVATE via CALL first because DEBUG_ENABLED=TRUE..."
 ::	CALL :LOG "    Use CTRL+C to break if all is well and continue normally."
-::	CALL "%~dp0\SessionSwapperUtils.js.cmd" "ACTIVATE"
+::	CALL "%~dp0\SessionLauncherUtils.js.cmd" "ACTIVATE"
 ::)
 
 CALL :LOG "[#] Starting ACTIVATE helper in background..."
-START "" "%comspec%" /c "%~dp0\SessionSwapperUtils.js.cmd ACTIVATE"
+START "" "%comspec%" /c "%~dp0\SessionLauncherUtils.js.cmd ACTIVATE"
 
 
 :: manual debug (breaks activation script obviously)

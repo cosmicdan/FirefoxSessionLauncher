@@ -1,13 +1,13 @@
 var ws = new ActiveXObject("WScript.Shell");
 var fso = new ActiveXObject("Scripting.FileSystemObject");
 
-var sessionSwapperStorageDir = ws.ExpandEnvironmentStrings("%SESSIONSWAPPER_STORAGE%");
+var sessionLauncherStorageDir = ws.ExpandEnvironmentStrings("%SESSIONLAUNCHER_STORAGE%");
 // sanity check - dont allow running manually
-if (sessionSwapperStorageDir === "" || !fso.FolderExists(sessionSwapperStorageDir)) {
-	alert("The SessionSwapper GUI cannot be run manually.");
+if (sessionLauncherStorageDir === "" || !fso.FolderExists(sessionLauncherStorageDir)) {
+	alert("The SessionLauncher GUI cannot be run manually.");
 	window.close();
 }
-var sessionSwapperStorageObj = fso.GetFolder(sessionSwapperStorageDir);
+var sessionLauncherStorageObj = fso.GetFolder(sessionLauncherStorageDir);
 var defaultSessionName = ws.ExpandEnvironmentStrings("%DEFAULT_SESSION_NAME%");
 var lastSessionName = ws.ExpandEnvironmentStrings("%LAST_SESSION_NAME%");
 
@@ -18,10 +18,10 @@ window.onload = function() {
 	window.resizeTo(guiWidth, guiHeight);
 	window.moveTo(((screen.width - guiWidth) / 2), ((screen.height - guiHeight) / 2));
 	
-	var guiSessionList = document.getElementById("sessionSwapperGuiSessionList");
+	var guiSessionList = document.getElementById("sessionLauncherGuiSessionList");
 	
 	// make the scrollbar look thinner by extending the width a little
-	var guiSessionListContainer = document.getElementById("sessionSwapperGuiSessionListContainer");
+	var guiSessionListContainer = document.getElementById("sessionLauncherGuiSessionListContainer");
 	guiSessionListContainer.style.width = guiWidth + 8;
 	
 	// fade handling
@@ -35,7 +35,7 @@ window.onload = function() {
 	};
 	
 	// set previous session
-	var guiSessionPrev = document.getElementById("sessionSwapperGuiSessionPrevious");
+	var guiSessionPrev = document.getElementById("sessionLauncherGuiSessionPrevious");
 	if (lastSessionName === "[N\\\\A]") {
 		guiSessionPrev.innerHTML = "<div name='sessionChoice' class='sessionChoice' style=\"font-style:italic;cursor:default;\">None</div>";
 	} else {
@@ -45,7 +45,7 @@ window.onload = function() {
 	// add any other sessions
 	// always add _Default to the top though
 	addSessionButton(guiSessionList, defaultSessionName);
-	var sessionEnumerator = new Enumerator(sessionSwapperStorageObj.SubFolders);
+	var sessionEnumerator = new Enumerator(sessionLauncherStorageObj.SubFolders);
 	for (; !sessionEnumerator.atEnd(); sessionEnumerator.moveNext()) {
 		var sessionName = sessionEnumerator.item().Name;
 		if (sessionName != defaultSessionName) {
@@ -54,8 +54,8 @@ window.onload = function() {
 	}
 	
 	// footer
-	var guiFooter = document.getElementById("sessionSwapperGuiFooter");
-	guiFooter.innerHTML += "<div class='footerButton' onclick='openSessionDirectory()'>Open SessionSwapper dir</div>";
+	var guiFooter = document.getElementById("sessionLauncherGuiFooter");
+	guiFooter.innerHTML += "<div class='footerButton' onclick='openSessionDirectory()'>Open SessionLauncher dir</div>";
 	
 	// setup hover stuff
 	var sessionChoiceButtons = document.getElementsByName('sessionChoice');
@@ -70,8 +70,8 @@ window.onload = function() {
 	
 	// finally, fixup the height on the scroll list div and align bottom fade
 	var bodyHeight = document.body.offsetHeight;
-	var percentageOfHeader = getElementHeight("sessionSwapperGuiHeader") / bodyHeight * 100;
-	var percentageOfFooter = getElementHeight("sessionSwapperGuiFooter") / bodyHeight * 100;
+	var percentageOfHeader = getElementHeight("sessionLauncherGuiHeader") / bodyHeight * 100;
+	var percentageOfFooter = getElementHeight("sessionLauncherGuiFooter") / bodyHeight * 100;
 	guiSessionListContainer.style.height = 100 - percentageOfHeader - percentageOfFooter + "%";
 	var guiListFadeBottom = document.getElementById("sessionListFadeBottom");
 	guiListFadeBottom.style.bottom = (guiFooter.clientHeight - 1);
@@ -95,7 +95,7 @@ function selectSession(sessionName) {
 }
 
 function openSessionDirectory() {
-	ws.run("Explorer /n, /e, " + sessionSwapperStorageDir);
+	ws.run("Explorer /n, /e, " + sessionLauncherStorageDir);
 }
 
 /* offsetHeight doesn't include margins so we need this */
