@@ -5,7 +5,7 @@
 # common stuff
 !/.gitignore
 !/README.md
-!/SessionSwapper/
+!/SessionLauncher/
 !/config.js
 
 # config-prefs.js too, but nothing else in that tree
