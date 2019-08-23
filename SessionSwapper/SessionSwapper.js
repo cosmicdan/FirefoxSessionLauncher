@@ -9,6 +9,7 @@ if (sessionSwapperStorageDir === "" || !fso.FolderExists(sessionSwapperStorageDi
 }
 var sessionSwapperStorageObj = fso.GetFolder(sessionSwapperStorageDir);
 var defaultSessionName = ws.ExpandEnvironmentStrings("%DEFAULT_SESSION_NAME%");
+var lastSessionName = ws.ExpandEnvironmentStrings("%LAST_SESSION_NAME%");
 
 window.onload = function() {
 	// size and center the window
@@ -35,7 +36,11 @@ window.onload = function() {
 	
 	// set previous session
 	var guiSessionPrev = document.getElementById("sessionSwapperGuiSessionPrevious");
-	guiSessionPrev.innerHTML = "<div name='sessionChoice' class='sessionChoice' onmouseover=\"sessionHover(this)\" onmouseout=\"sessionUnhover(this)\" onclick=\"selectSession('" + "_Default" + "')\">" + "_Default" + "</div>";
+	if (lastSessionName === "[N\\\\A]") {
+		guiSessionPrev.innerHTML = "<div name='sessionChoice' class='sessionChoice' style=\"font-style:italic;cursor:default;\">None</div>";
+	} else {
+		guiSessionPrev.innerHTML = "<div name='sessionChoice' class='sessionChoice' onmouseover=\"sessionHover(this)\" onmouseout=\"sessionUnhover(this)\" onclick=\"selectSession('" + lastSessionName + "')\">" + lastSessionName + "</div>";
+	}
 	
 	// add any other sessions
 	// always add _Default to the top though

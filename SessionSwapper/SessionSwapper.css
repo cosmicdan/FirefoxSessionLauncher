@@ -31,7 +31,7 @@ h2 {
 
 #sessionSwapperGuiHeader {
 	height: auto;
-	padding: 0;
+	padding: 5% 6% 0 6%;
 	margin: 0 0 8px 0;
 }
 
@@ -39,11 +39,18 @@ h2 {
 	margin: 0 20px -8px 0;
 }
 
+#sessionSwapperGuiHeader h2 {
+	padding-top: 5%;
+}
+
+#sessionSwapperGuiSessionPrevious {
+	
+}
 
 #sessionSwapperGuiSessionListContainer {
 	/* height is set via JS */
 	height: 50%;
-	padding: 0;
+	padding: 0 0;
 	margin: 0 0 0 0;
 }
 
@@ -52,12 +59,13 @@ h2 {
 	overflow-y: auto;
 	height: 100%;
 	width: 100%;
-	padding: 0 0 2em 4%;
+	/* NB: side padding is 3% to match alignment with sessionSwapperGuiHeader*/
+	padding: 0 6% 2em 6%;
 	margin: 0;
 	position:relative;
 }
 
-#sessionSwapperGuiSessionListContainer #sessionSwapperGuiSessionList div {
+div.sessionChoice, div.sessionChoice_hover {
 	width: 100%;
 	display: block; 
 	border: none;
@@ -67,17 +75,18 @@ h2 {
 	color: #eee;
 	font-family: "Segoe UI";
 	font-size: 11pt;
-	padding: 0.5em 0.6em;
-}
-
-#sessionSwapperGuiSessionListContainer #sessionSwapperGuiSessionList div.sessionChoice {
-	background-color: black;
+	padding: 0.5em 1em;
 	border: 0.15em #000 solid;
 }
 
-#sessionSwapperGuiSessionListContainer #sessionSwapperGuiSessionList div.sessionChoice_hover {
+div.sessionChoice {
+	background-color: black;
+	border-color: #000;
+}
+
+div.sessionChoice_hover {
 	background-color: #555;
-	border: 0.15em #888 solid;
+	border-color: #888;
 }
 
 #sessionSwapperGuiSessionListContainer #sessionListFadeTop {
@@ -110,5 +119,6 @@ h2 {
 }
 
 #sessionSwapperGuiFooter .footerButton {
-	
+	display: inline;
+	font-family: "Segoe UI";
 }

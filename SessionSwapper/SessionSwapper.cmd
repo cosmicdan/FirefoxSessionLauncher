@@ -34,12 +34,13 @@ IF NOT EXIST "%SESSIONSWAPPER_STORAGE%\%DEFAULT_SESSION_NAME%" (
 	CALL :LOG "[i] Created directory- %SESSIONSWAPPER_STORAGE%\%DEFAULT_SESSION_NAME%\"
 )
 
-
+SET LAST_SESSION_NAME=[N\\A]
 
 :: Check for previous session files and store them back to their right location, if possible
 IF EXIST "%SESSIONSWAPPER_DIR%\current_session" (
 	:: First check if current_session exists [flag written by previous run of SessionSwapper]
 	FOR /F "delims=" %%x IN (%SESSIONSWAPPER_DIR%\current_session) DO SET LAST_SESSION=%%x
+	SET LAST_SESSION_NAME=!LAST_SESSION!
 	CALL :LOG "[i] Previous session found: !LAST_SESSION!"
 	IF EXIST "%SESSIONSWAPPER_STORAGE%\!LAST_SESSION!\" (
 		:: Move the current sessionstore back to the last-active session folder. TODO: Only automatically overwrite if newer, otherwise prompt
