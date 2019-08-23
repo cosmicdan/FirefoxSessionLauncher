@@ -53,9 +53,9 @@ window.onload = function() {
 		}
 	}
 	
-	// footer
+	// footer buttons
 	var guiFooter = document.getElementById("sessionLauncherGuiFooter");
-	guiFooter.innerHTML += "<div class='footerButton' onclick='openSessionDirectory()'>Open SessionLauncher dir</div>";
+	guiFooter.innerHTML += "<div class='button' onmouseover=\"buttonHover(this)\" onmouseout=\"buttonUnhover(this)\" onclick='newSession()'>New...</div>";
 	
 	// setup hover stuff
 	var sessionChoiceButtons = document.getElementsByName('sessionChoice');
@@ -89,14 +89,46 @@ function sessionUnhover(e) {
 	e.className = "sessionChoice";
 }
 
+function buttonHover(e) {
+	e.className = "button_hover";
+}
+
+function buttonUnhover(e) {
+	e.className = "button";
+}
+
 function selectSession(sessionName) {
 	fso.GetStandardStream(1).WriteLine(sessionName);
 	window.close();
 }
 
+function newSession() {
+	var newSessionName = prompt("Session name:", "");
+	if (newSessionName == null || newSessionName === "") {
+		// user cancelled or entered nothing
+		return;
+	}
+	var newSessionPath = sessionLauncherStorageDir + "\\" + newSessionName;
+	if (fso.FolderExists(newSessionPath)) {
+		// session exists, cancel
+		alert("Session '" + newSessionName + "' already exists. Cancelled.");
+		return;
+	}
+	// try creating the folder
+	try {
+		fso.CreateFolder(newSessionPath);
+	}
+	catch (err) {
+		alert("Error creating session folder. Either the folder name is invalid (special characters) or a security exception occured.");
+	}
+	location.reload(true);
+}
+
+/*
 function openSessionDirectory() {
 	ws.run("Explorer /n, /e, " + sessionLauncherStorageDir);
 }
+*/
 
 /* offsetHeight doesn't include margins so we need this */
 function getElementHeight(eId) {

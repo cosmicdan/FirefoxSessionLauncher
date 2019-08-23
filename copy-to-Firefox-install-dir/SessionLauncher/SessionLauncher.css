@@ -74,8 +74,8 @@ div.sessionChoice, div.sessionChoice_hover {
 	text-align: left;
 	color: #eee;
 	font-family: "Segoe UI";
-	font-size: 11pt;
-	padding: 0.5em 1em;
+	font-size: 10pt;
+	padding: 0.3em 1em;
 	border: 0.15em #000 solid;
 }
 
@@ -92,7 +92,7 @@ div.sessionChoice_hover {
 #sessionLauncherGuiSessionListContainer #sessionListFadeTop {
 	position: absolute;
     z-index: 100;
-    height: 12%;
+    height: 15%;
 	width: 100%;
 	left: 99999px;
 	overflow: hidden;
@@ -104,7 +104,7 @@ div.sessionChoice_hover {
     z-index: 100;
     right:0; left:0; bottom: 0;
 	/* bottom is re-set via JS */
-    height: 12%;
+    height: 15%;
 	width: 100%;
 	overflow: hidden;
 	filter: progid:DXImageTransform.Microsoft.gradient( startColorstr='#00000000', endColorstr='#000000',GradientType=0 );
@@ -112,13 +112,27 @@ div.sessionChoice_hover {
 
 #sessionLauncherGuiFooter {
 	/* height total = 15% */
-	height: 15%;
+	height: 0;
 	margin: 0;
-	padding: 0;
+	padding: 1em 2em 2em 2em;
 	
 }
 
-#sessionLauncherGuiFooter .footerButton {
+.button, .button_hover {
 	display: inline;
 	font-family: "Segoe UI";
+	background-color: #373737;
+	line-height: 1.8em;
+}
+
+.button {
+	padding: 8px 26px;
+	margin: 0;
+	border: 1px #111 solid;
+}
+
+.button_hover {
+	padding: 6px 24px;
+	margin: 1px;
+	border: 2px #999 solid;
 }

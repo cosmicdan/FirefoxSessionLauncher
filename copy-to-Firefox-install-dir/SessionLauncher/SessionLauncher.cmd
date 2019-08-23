@@ -24,11 +24,9 @@ IF NOT EXIST "%SESSIONLAUNCHER_STORAGE%\" (
 	CALL :LOG "[i] Created directory- %SESSIONLAUNCHER_STORAGE%\"
 )
 
+:: Create default session if required [we need at least one session]
 SET DEFAULT_SESSION_NAME=_Default
 CALL :LOG "[i] Default session name- %DEFAULT_SESSION_NAME%"
-
-:: Create default session if required [we need at least one session]
-
 IF NOT EXIST "%SESSIONLAUNCHER_STORAGE%\%DEFAULT_SESSION_NAME%" (
 	MKDIR "%SESSIONLAUNCHER_STORAGE%\%DEFAULT_SESSION_NAME%"
 	CALL :LOG "[i] Created directory- %SESSIONLAUNCHER_STORAGE%\%DEFAULT_SESSION_NAME%\"
