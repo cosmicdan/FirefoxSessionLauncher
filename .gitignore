@@ -4,7 +4,8 @@
 
 # common stuff
 !/.gitignore
-!/README.md
+!/*.md
+!/*.cmd
 !/copy-to-Firefox-install-dir/
 !/copy-to-Firefox-install-dir/SessionLauncher/
 !/copy-to-Firefox-install-dir/config.js
