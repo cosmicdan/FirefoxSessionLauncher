@@ -4,7 +4,7 @@ SETLOCAL ENABLEDELAYEDEXPANSION
 :: Get profile path
 SET MOZ_PROFILE_PATH=%MOZ_CRASHREPORTER_EVENTS_DIRECTORY:\crashes\events=%
 ::SET MOZ_PROFILE_PATH=C:\Users\CosmicDan\AppData\Roaming\Mozilla\Firefox\Profiles\a80gphfl.default-esr
-SET SESSIONLAUNCHER_DIR=%MOZ_PROFILE_PATH%\SessionLauncher
+SET SESSIONLAUNCHER_DIR=%MOZ_PROFILE_PATH%\sessionlauncher
 SET SESSIONLAUNCHER_STORAGE=%SESSIONLAUNCHER_DIR%\sessions
 
 :: Logging
@@ -117,11 +117,11 @@ ECHO !sessionChoice!> "%SESSIONLAUNCHER_DIR%\current_session"
 ::IF "%DEBUG_ENABLED%"=="TRUE" (
 ::	CALL :LOG "[X] Calling ACTIVATE via CALL first because DEBUG_ENABLED=TRUE..."
 ::	CALL :LOG "    Use CTRL+C to break if all is well and continue normally."
-::	CALL "%~dp0\SessionLauncherUtils.js.cmd" "ACTIVATE"
+::	CALL "%~dp0\Utils.js.cmd" "ACTIVATE"
 ::)
 
 CALL :LOG "[#] Starting ACTIVATE helper in background..."
-START "" "%comspec%" /c "%~dp0\SessionLauncherUtils.js.cmd ACTIVATE"
+START "" "%comspec%" /c "%~dp0\Utils.js.cmd ACTIVATE"
 
 
 :: manual debug (breaks activation script obviously)
