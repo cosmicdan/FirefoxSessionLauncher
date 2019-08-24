@@ -39,6 +39,17 @@ h2 {
 	font-size: 14pt;
 }
 
+h3 {
+	padding: 0;
+	margin: 0 0 0 4%;
+	font-family: "Segoe UI Light";
+	font-style: italic;
+	text-align: left;
+	font-size: 13pt;
+	font-weight: 500;
+	color: #ccc;
+}
+
 #sessionLauncherGuiHeader {
 	height: auto;
 	padding: 5% 0 0 0;
@@ -123,7 +134,7 @@ span.sessionChoiceDelete_hover { background: url("img/deleteHover.png") no-repea
 	
 #sessionLauncherGuiSessionListContainer #sessionListFadeTop {
 	position: absolute;
-	z-index: 100;
+	z-index: 10;
 	height: 15%;
 	width: 100%;
 	left: 99999px;
@@ -133,7 +144,7 @@ span.sessionChoiceDelete_hover { background: url("img/deleteHover.png") no-repea
 
 #sessionLauncherGuiSessionListContainer #sessionListFadeBottom {
 	position: absolute;
-	z-index: 100;
+	z-index: 10;
 	right:0; left:0; bottom: 0;
 	/* bottom is re-set via JS */
 	height: 15%;
@@ -156,6 +167,7 @@ span.sessionChoiceDelete_hover { background: url("img/deleteHover.png") no-repea
 	background-color: #373737;
 	line-height: 1.8em;
 	padding: 5px 22px;
+	margin-right: 1em;
 }
 
 .button {
@@ -164,4 +176,46 @@ span.sessionChoiceDelete_hover { background: url("img/deleteHover.png") no-repea
 
 .button_hover {
 	border: 2px #999 solid;
+}
+
+
+#promptOverlay {
+	z-index: 1000;
+	position: absolute; 
+	top: 0; left: 0; right: 0; bottom: 0;
+	background: url("img/dialogBg.png");
+	/* these are set by JS as required */
+	width: 0%;
+	height: 0%;
+}
+
+#promptBox {
+	visibility: hidden;
+	padding: 1.2em 1em;
+	position: absolute;
+	background-color: black;
+	border: 1px #373737 solid;
+	width: 80%;
+	height: 35%;
+	left: 10%;
+	top: 30%;
+}
+
+input {
+	margin: 1em 4% 0 4%;
+	width: 100%;
+	height: 2.3em;
+	padding: 0.4em;
+	font-size: 0.9em;
+	background-color: #111;
+	color: white;
+	border: 1px #373737 solid;
+}
+
+#promptButtonRow {
+	position: absolute;
+	padding: 1em 0 1em 1em;
+	bottom: 0;
+	right: 0;
+	
 }

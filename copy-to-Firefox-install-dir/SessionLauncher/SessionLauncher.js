@@ -60,7 +60,7 @@ window.onload = function() {
 	
 	// footer buttons
 	var guiFooter = document.getElementById("sessionLauncherGuiFooter");
-	guiFooter.innerHTML += "<div class='button' onmouseover=\"buttonHover(this)\" onmouseout=\"buttonUnhover(this)\" onclick='newSession()'>New...</div>";
+	guiFooter.innerHTML += "<div class='button' onmouseover=\"buttonHover(this)\" onmouseout=\"buttonUnhover(this)\" onclick='newSessionDialog()'>New...</div>";
 	
 	// setup hover stuff
 	var sessionChoiceButtons = document.getElementsByName('sessionChoice');
@@ -86,6 +86,9 @@ window.onload = function() {
 	guiSessionListContainer.style.width = guiWidth + 8;
 	// also resize guiSessionPrev depending on if scroll bar is visible
 	guiSessionPrev.style.width = guiWidth + (guiSessionList.scrollHeight > guiSessionList.offsetHeight ? -8 : 8);
+	
+	// DEBUG
+	//newSessionDialog();
 }
 
 function addSessionRow(guiSessionListIn, sessionNameIn) {
@@ -94,7 +97,7 @@ function addSessionRow(guiSessionListIn, sessionNameIn) {
 		"<span id='sessionChoice_" + sessionRow + "' name='sessionChoice' class='sessionChoice' onmouseover=\"sessionHover(" + sessionRow + ")\" onmouseout=\"sessionUnhover(" + sessionRow + ")\" onclick=\"selectSession('" + sessionNameIn + "')\">" + sessionNameIn + "</span>"
 	// copy button
 	guiSessionListIn.innerHTML +=
-		"<span id='sessionChoiceCopy_" + sessionRow + "' class='sessionChoiceBtnHidden' onmouseover=\"sessionChoiceCopyHover(this, " + sessionRow + ")\" onmouseout=\"sessionChoiceCopyUnhover(this, " + sessionRow + ")\" onclick=\"sessionChoiceCopy('" + sessionNameIn + "')\"></span>"
+		"<span id='sessionChoiceCopy_" + sessionRow + "' class='sessionChoiceBtnHidden' onmouseover=\"sessionChoiceCopyHover(this, " + sessionRow + ")\" onmouseout=\"sessionChoiceCopyUnhover(this, " + sessionRow + ")\" onclick=\"copySessionDialog('" + sessionNameIn + "')\"></span>"
 	// rename and delete buttons
 	if (sessionNameIn === defaultSessionName) {
 		// don't show rename or delete for DEFAULT session
@@ -105,9 +108,9 @@ function addSessionRow(guiSessionListIn, sessionNameIn) {
 	} else {
 		// regular session
 		guiSessionListIn.innerHTML +=
-			"<span id='sessionChoiceRename_" + sessionRow + "' class='sessionChoiceBtnHidden' onmouseover=\"sessionChoiceRenameHover(this, " + sessionRow + ");\" onmouseout=\"sessionChoiceRenameUnhover(this, " + sessionRow + ")\" onclick=\"sessionChoiceRename('" + sessionNameIn + "')\"></span>";
+			"<span id='sessionChoiceRename_" + sessionRow + "' class='sessionChoiceBtnHidden' onmouseover=\"sessionChoiceRenameHover(this, " + sessionRow + ");\" onmouseout=\"sessionChoiceRenameUnhover(this, " + sessionRow + ")\" onclick=\"renameSessionDialog('" + sessionNameIn + "')\"></span>";
 		guiSessionListIn.innerHTML +=
-			"<span id='sessionChoiceDelete_" + sessionRow + "' class='sessionChoiceBtnHidden' onmouseover=\"sessionChoiceDeleteHover(this, " + sessionRow + ")\" onmouseout=\"sessionChoiceDeleteUnhover(this, " + sessionRow + ")\" onclick=\"sessionChoiceDelete('" + sessionNameIn + "')\"></span>"
+			"<span id='sessionChoiceDelete_" + sessionRow + "' class='sessionChoiceBtnHidden' onmouseover=\"sessionChoiceDeleteHover(this, " + sessionRow + ")\" onmouseout=\"sessionChoiceDeleteUnhover(this, " + sessionRow + ")\" onclick=\"deleteSessionDialog('" + sessionNameIn + "')\"></span>"
 	}
 	sessionRow += 1;
 }
@@ -141,14 +144,20 @@ function selectSession(sessionName) {
 	window.close();
 }
 
-function newSession() {
-	var newSessionName = prompt("Session name:", "");
+function newSessionDialog() {
+	showInputDialog("Create New Session", "Enter new session name", "Create", "newSessionConfirm()");
+}
+
+function newSessionConfirm() {
+	var newSessionName = document.getElementById("promptinput").value;
 	if (newSessionName == null || newSessionName === "") {
 		// user cancelled or entered nothing
+		dialogCancel();
 		return;
 	}
 	var newSessionPath = sessionLauncherStorageDir + "\\" + newSessionName;
 	if (alertSessionPathExists(newSessionName, newSessionPath)) {
+		dialogCancel();
 		return;
 	}
 	// try creating the folder
@@ -162,20 +171,78 @@ function newSession() {
 	location.reload(true);
 }
 
-function sessionChoiceCopy(sessionNameIn) {
-	var newSessionName = prompt("Copy '" + sessionNameIn + "' to new Session with name:", "");
+function deleteSessionDialog(sessionNameIn) {
+	showInputDialog("Delete Session", "Are you sure? Type the session name <b>" + sessionNameIn + "</b> to confirm.", "Delete", "deleteSessionConfirm(\"" + sessionNameIn + "\")");
+}
+
+function deleteSessionConfirm(sessionNameIn) {
+	var deleteConfirm = document.getElementById("promptinput").value;
+	// this one doesn't like === for some reason (guessing input.value is not a string type)
+	if (sessionNameIn == deleteConfirm) {
+		fso.DeleteFolder(sessionLauncherStorageDir + "\\" + sessionNameIn);
+		location.reload(true);
+	} else {
+		dialogCancel();
+	}
+}
+
+function copySessionDialog(sessionNameIn) {
+	showInputDialog("Copy Session", "Enter session name for copy of <b>" + sessionNameIn + "</b>", "Copy", "copySessionConfirm(\"" + sessionNameIn + "\")");
+}
+
+function copySessionConfirm(sessionNameIn) {
+	var newSessionName = document.getElementById("promptinput").value;
 	if (newSessionName == null || newSessionName === "") {
 		// user cancelled or entered nothing
+		dialogCancel();
 		return;
 	}
 	var oldSessionPath = sessionLauncherStorageDir + "\\" + sessionNameIn;
 	var newSessionPath = sessionLauncherStorageDir + "\\" + newSessionName;
 	if (alertSessionPathExists(newSessionName, newSessionPath)) {
+		dialogCancel();
 		return;
 	}
-	fso.CopyFolder(oldSessionPath, newSessionPath);
+	// try copying the folder
+	try {
+		fso.CopyFolder(oldSessionPath, newSessionPath);
+	}
+	catch (err) {
+		alert("Error copying session folder. Either the folder name is" + "\n" + 
+			"invalid (special characters) or a security exception occured.");
+	}
 	location.reload(true);
 }
+
+function renameSessionDialog(sessionNameIn) {
+	showInputDialog("Rename Session", "Enter new session name for <b>" + sessionNameIn + "</b>", "Rename", "renameSessionConfirm(\"" + sessionNameIn + "\")");
+}
+
+function renameSessionConfirm(sessionNameIn) {
+	var newSessionName = document.getElementById("promptinput").value;
+	if (newSessionName == null || newSessionName === "") {
+		// user cancelled or entered nothing
+		dialogCancel();
+		return;
+	}
+	var oldSessionPath = sessionLauncherStorageDir + "\\" + sessionNameIn;
+	var newSessionPath = sessionLauncherStorageDir + "\\" + newSessionName;
+	if (alertSessionPathExists(newSessionName, newSessionPath)) {
+		dialogCancel();
+		return;
+	}
+	// try moving the folder
+	try {
+		fso.MoveFolder(oldSessionPath, newSessionPath);
+	}
+	catch (err) {
+		alert("Error copying session folder. Either the folder name is" + "\n" + 
+			  "invalid (special characters) or a security exception occured.");
+	}
+	location.reload(true);
+}
+
+/*
 
 function sessionChoiceRename(sessionNameIn) {
 	var newSessionName = prompt("Rename '" + sessionNameIn + "' to:", "");
@@ -192,18 +259,32 @@ function sessionChoiceRename(sessionNameIn) {
 	location.reload(true);
 }
 
-function sessionChoiceDelete(sessionNameIn) {
-	if (fso.FolderExists(sessionLauncherStorageDir + "\\" + sessionNameIn)) {
-		var newSessionName = prompt("Delete '" + sessionNameIn + "'? This can not be undone! Type YES to confirm.", "");
-		if (newSessionName == null || newSessionName === "") {
-			// user cancelled or entered nothing
-			return;
-		}
-		if (newSessionName === "YES") {
-			fso.DeleteFolder(sessionLauncherStorageDir + "\\" + sessionNameIn);
-		}
-	}
-	location.reload(true);
+*/
+
+function showInputDialog(title, text, okButtonText, okFunctionName) {
+	var promptOverlay = document.getElementById("promptOverlay");
+	var promptBox = document.getElementById("promptBox");
+	promptOverlay.style.width = document.body.offsetWidth;
+	promptOverlay.style.height = document.body.offsetHeight;
+	promptBox.style.visibility = "visible";
+	promptBox.innerHTML =
+	"<h1>" + title + "</h1>" +
+	"<h3>" + text + "</h3>" +
+	"<input type='text' id='promptinput'/>" +
+	"<div id='promptButtonRow'>" +
+		//"<div class='button' onmouseover=\"buttonHover(this)\" onmouseout=\"buttonUnhover(this)\" onclick='" + okFunctionName + "()'>" + okButtonText + "</div>" +
+		"<div class='button' onmouseover=\"buttonHover(this)\" onmouseout=\"buttonUnhover(this)\" onclick='" + okFunctionName + "'>" + okButtonText + "</div>" +
+		"<div class='button' onmouseover=\"buttonHover(this)\" onmouseout=\"buttonUnhover(this)\" onclick='dialogCancel()'>Cancel</div>" +
+	"</div>";
+}
+
+function dialogCancel() {
+	var promptOverlay = document.getElementById("promptOverlay");
+	var promptBox = document.getElementById("promptBox");
+	promptBox.innerHTML = "";
+	promptBox.style.visibility = "hidden";
+	promptOverlay.style.width = 0;
+	promptOverlay.style.height = 0;
 }
 
 function alertSessionPathExists(newSessionNameIn, pathIn) {
