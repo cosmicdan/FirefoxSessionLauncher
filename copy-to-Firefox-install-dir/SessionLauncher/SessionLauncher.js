@@ -89,14 +89,26 @@ window.onload = function() {
 }
 
 function addSessionRow(guiSessionListIn, sessionNameIn) {
+	// session name
 	guiSessionListIn.innerHTML += 
 		"<span id='sessionChoice_" + sessionRow + "' name='sessionChoice' class='sessionChoice' onmouseover=\"sessionHover(" + sessionRow + ")\" onmouseout=\"sessionUnhover(" + sessionRow + ")\" onclick=\"selectSession('" + sessionNameIn + "')\">" + sessionNameIn + "</span>"
-	guiSessionListIn.innerHTML +=
-		"<span id='sessionChoiceRename_" + sessionRow + "' class='sessionChoiceBtnHidden' onmouseover=\"sessionChoiceRenameHover(this, " + sessionRow + ");\" onmouseout=\"sessionChoiceRenameUnhover(this, " + sessionRow + ")\" onclick=\"sessionChoiceRename('" + sessionNameIn + "')\"></span>"
+	// copy button
 	guiSessionListIn.innerHTML +=
 		"<span id='sessionChoiceCopy_" + sessionRow + "' class='sessionChoiceBtnHidden' onmouseover=\"sessionChoiceCopyHover(this, " + sessionRow + ")\" onmouseout=\"sessionChoiceCopyUnhover(this, " + sessionRow + ")\" onclick=\"sessionChoiceCopy('" + sessionNameIn + "')\"></span>"
-	guiSessionListIn.innerHTML +=
-		"<span id='sessionChoiceDelete_" + sessionRow + "' class='sessionChoiceBtnHidden' onmouseover=\"sessionChoiceDeleteHover(this, " + sessionRow + ")\" onmouseout=\"sessionChoiceDeleteUnhover(this, " + sessionRow + ")\" onclick=\"sessionChoiceDelete('" + sessionNameIn + "')\"></span>"
+	// rename and delete buttons
+	if (sessionNameIn === defaultSessionName) {
+		// don't show rename or delete for DEFAULT session
+		guiSessionListIn.innerHTML +=
+			"<span id='sessionChoiceRename_" + sessionRow + "' style=visibility:hidden;'></span>";
+		guiSessionListIn.innerHTML +=
+			"<span id='sessionChoiceDelete_" + sessionRow + "' style=visibility:hidden;'></span>";
+	} else {
+		// regular session
+		guiSessionListIn.innerHTML +=
+			"<span id='sessionChoiceRename_" + sessionRow + "' class='sessionChoiceBtnHidden' onmouseover=\"sessionChoiceRenameHover(this, " + sessionRow + ");\" onmouseout=\"sessionChoiceRenameUnhover(this, " + sessionRow + ")\" onclick=\"sessionChoiceRename('" + sessionNameIn + "')\"></span>";
+		guiSessionListIn.innerHTML +=
+			"<span id='sessionChoiceDelete_" + sessionRow + "' class='sessionChoiceBtnHidden' onmouseover=\"sessionChoiceDeleteHover(this, " + sessionRow + ")\" onmouseout=\"sessionChoiceDeleteUnhover(this, " + sessionRow + ")\" onclick=\"sessionChoiceDelete('" + sessionNameIn + "')\"></span>"
+	}
 	sessionRow += 1;
 }
 
@@ -136,9 +148,7 @@ function newSession() {
 		return;
 	}
 	var newSessionPath = sessionLauncherStorageDir + "\\" + newSessionName;
-	if (fso.FolderExists(newSessionPath)) {
-		// session exists, cancel
-		alert("Session '" + newSessionName + "' already exists. Cancelled.");
+	if (alertSessionPathExists(newSessionName, newSessionPath)) {
 		return;
 	}
 	// try creating the folder
@@ -152,11 +162,57 @@ function newSession() {
 	location.reload(true);
 }
 
-/*
-function openSessionDirectory() {
-	ws.run("Explorer /n, /e, " + sessionLauncherStorageDir);
+function sessionChoiceCopy(sessionNameIn) {
+	var newSessionName = prompt("Copy '" + sessionNameIn + "' to new Session with name:", "");
+	if (newSessionName == null || newSessionName === "") {
+		// user cancelled or entered nothing
+		return;
+	}
+	var oldSessionPath = sessionLauncherStorageDir + "\\" + sessionNameIn;
+	var newSessionPath = sessionLauncherStorageDir + "\\" + newSessionName;
+	if (alertSessionPathExists(newSessionName, newSessionPath)) {
+		return;
+	}
+	fso.CopyFolder(oldSessionPath, newSessionPath);
+	location.reload(true);
 }
-*/
+
+function sessionChoiceRename(sessionNameIn) {
+	var newSessionName = prompt("Rename '" + sessionNameIn + "' to:", "");
+	if (newSessionName == null || newSessionName === "") {
+		// user cancelled or entered nothing
+		return;
+	}
+	var oldSessionPath = sessionLauncherStorageDir + "\\" + sessionNameIn;
+	var newSessionPath = sessionLauncherStorageDir + "\\" + newSessionName;
+	if (alertSessionPathExists(newSessionName, newSessionPath)) {
+		return;
+	}
+	fso.MoveFolder(oldSessionPath, newSessionPath);
+	location.reload(true);
+}
+
+function sessionChoiceDelete(sessionNameIn) {
+	if (fso.FolderExists(sessionLauncherStorageDir + "\\" + sessionNameIn)) {
+		var newSessionName = prompt("Delete '" + sessionNameIn + "'? This can not be undone! Type YES to confirm.", "");
+		if (newSessionName == null || newSessionName === "") {
+			// user cancelled or entered nothing
+			return;
+		}
+		if (newSessionName === "YES") {
+			fso.DeleteFolder(sessionLauncherStorageDir + "\\" + sessionNameIn);
+		}
+	}
+	location.reload(true);
+}
+
+function alertSessionPathExists(newSessionNameIn, pathIn) {
+	if (fso.FolderExists(pathIn)) {
+		// session exists, cancel
+		alert("Session '" + newSessionNameIn + "' already exists. Cancelled.");
+		return;
+	}
+}
 
 /* offsetHeight doesn't include margins so we need this */
 function getElementHeight(eId) {
