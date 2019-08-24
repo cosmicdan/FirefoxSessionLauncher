@@ -74,22 +74,23 @@ h2 {
 	overflow-y: auto;
 	height: 100%;
 	width: 100%;
-	/* NB: side padding is 3% to match alignment with sessionLauncherGuiHeader*/
-	padding: 0 6% 4em 6%;
+	padding: 0 2% 4em 6%;
 	margin: 0;
 	position:relative;
 }
 
 span.sessionChoice, span.sessionChoice_hover {
-	width: 80%;
+	width: 78%;
+	height: 32px;
 	border: none;
-	margin: 10px 4px 0 4px;
+	margin: 4px 4px;
 	cursor: pointer;
 	text-align: left;
 	color: #eee;
 	font-family: "Segoe UI";
 	font-size: 10pt;
-	padding: 0.45em 1em;
+	padding: 0px 1em;
+	line-height: 32px;
 }
 
 span.sessionChoice {
@@ -99,6 +100,26 @@ span.sessionChoice {
 span.sessionChoice_hover {
 	background-color: #373737;
 }
+
+span.sessionChoiceBtnHidden {
+	background: none;
+}
+
+span.sessionChoiceRename, span.sessionChoiceRename_hover,
+span.sessionChoiceCopy, span.sessionChoiceCopy_hover,
+span.sessionChoiceDelete, span.sessionChoiceDelete_hover,
+span.sessionChoiceBtnHidden {
+	width: 32px;
+	height: 32px;
+	margin-bottom: -6px;
+}
+span.sessionChoiceBtnHidden {background: none;}
+span.sessionChoiceRename       { background: url("img/rename.png") no-repeat center center; }
+span.sessionChoiceRename_hover { background: url("img/renameHover.png") no-repeat center center; }
+span.sessionChoiceCopy       { background: url("img/copy.png") no-repeat center center; }
+span.sessionChoiceCopy_hover { background: url("img/copyHover.png") no-repeat center center; }
+span.sessionChoiceDelete       { background: url("img/delete.png") no-repeat center center; }
+span.sessionChoiceDelete_hover { background: url("img/deleteHover.png") no-repeat center center; }
 	
 #sessionLauncherGuiSessionListContainer #sessionListFadeTop {
 	position: absolute;

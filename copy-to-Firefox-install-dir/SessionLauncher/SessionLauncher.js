@@ -10,8 +10,12 @@ if (sessionLauncherStorageDir === "" || !fso.FolderExists(sessionLauncherStorage
 var sessionLauncherStorageObj = fso.GetFolder(sessionLauncherStorageDir);
 var defaultSessionName = ws.ExpandEnvironmentStrings("%DEFAULT_SESSION_NAME%");
 var lastSessionName = ws.ExpandEnvironmentStrings("%LAST_SESSION_NAME%");
+// session counter for hover/control stuff
+var sessionRow = 0;
 
 window.onload = function() {
+	sessionRow = 0;
+	
 	// size and center the window
 	var guiWidth = screen.width / 3.5;
 	var guiHeight = screen.height / 1.4;
@@ -37,30 +41,26 @@ window.onload = function() {
 	if (lastSessionName === "[N\\\\A]" || !fso.FolderExists(sessionLauncherStorageDir + "\\" + lastSessionName)) {
 		guiSessionPrev.innerHTML += "<span name='sessionChoice' class='sessionChoice' style=\"font-style:italic;cursor:default;\">None</span>";
 	} else {
-		guiSessionPrev.innerHTML += "<span name='sessionChoice' class='sessionChoice' onmouseover=\"sessionHover(this)\" onmouseout=\"sessionUnhover(this)\" onclick=\"selectSession('" + lastSessionName + "')\">" + lastSessionName + "</span>";
+		addSessionRow(guiSessionPrev, lastSessionName);
 	}
 	guiSessionPrev.innerHTML += "</div>";
 	
-	// add any other sessions
+	// add all other sessions
 	// always add _Default to the top though
-	addSessionButton(guiSessionList, defaultSessionName);
+	guiSessionList.innerHTML = "<div>";
+	addSessionRow(guiSessionList, defaultSessionName);
 	var sessionEnumerator = new Enumerator(sessionLauncherStorageObj.SubFolders);
 	for (; !sessionEnumerator.atEnd(); sessionEnumerator.moveNext()) {
 		var sessionName = sessionEnumerator.item().Name;
 		if (sessionName != defaultSessionName) {
-			addSessionButton(guiSessionList, sessionName);
+			addSessionRow(guiSessionList, sessionName);
 		}
 	}
+	guiSessionPrev.innerHTML += "</div>";
 	
 	// footer buttons
 	var guiFooter = document.getElementById("sessionLauncherGuiFooter");
 	guiFooter.innerHTML += "<div class='button' onmouseover=\"buttonHover(this)\" onmouseout=\"buttonUnhover(this)\" onclick='newSession()'>New...</div>";
-	
-	// make the scrollbar look thinner by extending the width a little
-	var guiSessionListContainer = document.getElementById("sessionLauncherGuiSessionListContainer");
-	guiSessionListContainer.style.width = guiWidth + 8;
-	// also enlarge guiSessionPrev by same so they're aligned
-	guiSessionPrev.style.width = guiWidth + 8;
 	
 	// setup hover stuff
 	var sessionChoiceButtons = document.getElementsByName('sessionChoice');
@@ -73,6 +73,7 @@ window.onload = function() {
 		};
 	}
 	
+	var guiSessionListContainer = document.getElementById("sessionLauncherGuiSessionListContainer");
 	// finally, fixup the height on the scroll list div and align bottom fade
 	var bodyHeight = document.body.offsetHeight;
 	var percentageOfHeader = getElementHeight("sessionLauncherGuiHeader") / bodyHeight * 100;
@@ -80,27 +81,48 @@ window.onload = function() {
 	guiSessionListContainer.style.height = 100 - percentageOfHeader - percentageOfFooter + "%";
 	var guiListFadeBottom = document.getElementById("sessionListFadeBottom");
 	guiListFadeBottom.style.bottom = (guiFooter.clientHeight - 1);
+	
+	// make the scrollbar look thinner by extending the width a little
+	guiSessionListContainer.style.width = guiWidth + 8;
+	// also resize guiSessionPrev depending on if scroll bar is visible
+	guiSessionPrev.style.width = guiWidth + (guiSessionList.scrollHeight > guiSessionList.offsetHeight ? -8 : 8);
 }
 
-function addSessionButton(guiSessionList, sessionName) {
-	guiSessionList.innerHTML += "<div><span name='sessionChoice' class='sessionChoice' onmouseover=\"sessionHover(this)\" onmouseout=\"sessionUnhover(this)\" onclick=\"selectSession('" + sessionName + "')\">" + sessionName + "</span></div>"
+function addSessionRow(guiSessionListIn, sessionNameIn) {
+	guiSessionListIn.innerHTML += 
+		"<span id='sessionChoice_" + sessionRow + "' name='sessionChoice' class='sessionChoice' onmouseover=\"sessionHover(" + sessionRow + ")\" onmouseout=\"sessionUnhover(" + sessionRow + ")\" onclick=\"selectSession('" + sessionNameIn + "')\">" + sessionNameIn + "</span>"
+	guiSessionListIn.innerHTML +=
+		"<span id='sessionChoiceRename_" + sessionRow + "' class='sessionChoiceBtnHidden' onmouseover=\"sessionChoiceRenameHover(this, " + sessionRow + ");\" onmouseout=\"sessionChoiceRenameUnhover(this, " + sessionRow + ")\" onclick=\"sessionChoiceRename('" + sessionNameIn + "')\"></span>"
+	guiSessionListIn.innerHTML +=
+		"<span id='sessionChoiceCopy_" + sessionRow + "' class='sessionChoiceBtnHidden' onmouseover=\"sessionChoiceCopyHover(this, " + sessionRow + ")\" onmouseout=\"sessionChoiceCopyUnhover(this, " + sessionRow + ")\" onclick=\"sessionChoiceCopy('" + sessionNameIn + "')\"></span>"
+	guiSessionListIn.innerHTML +=
+		"<span id='sessionChoiceDelete_" + sessionRow + "' class='sessionChoiceBtnHidden' onmouseover=\"sessionChoiceDeleteHover(this, " + sessionRow + ")\" onmouseout=\"sessionChoiceDeleteUnhover(this, " + sessionRow + ")\" onclick=\"sessionChoiceDelete('" + sessionNameIn + "')\"></span>"
+	sessionRow += 1;
 }
 
-function sessionHover(e) {
-	e.className = "sessionChoice_hover";
+// all the hover stuff
+function sessionHover(sessionRowIn) {
+	document.getElementById("sessionChoice_" + sessionRowIn).className = "sessionChoice_hover";
+	// show the buttons for this row
+	document.getElementById("sessionChoiceRename_" + sessionRowIn).className = "sessionChoiceRename";
+	document.getElementById("sessionChoiceCopy_" + sessionRowIn).className = "sessionChoiceCopy";
+	document.getElementById("sessionChoiceDelete_" + sessionRowIn).className = "sessionChoiceDelete";
 }
-
-function sessionUnhover(e) {
-	e.className = "sessionChoice";
+function sessionUnhover(sessionRowIn) {
+	document.getElementById("sessionChoice_" + sessionRowIn).className = "sessionChoice";
+	// hide the buttons for this row
+	document.getElementById("sessionChoiceRename_" + sessionRowIn).className = "sessionChoiceBtnHidden";
+	document.getElementById("sessionChoiceCopy_" + sessionRowIn).className = "sessionChoiceBtnHidden";
+	document.getElementById("sessionChoiceDelete_" + sessionRowIn).className = "sessionChoiceBtnHidden";
 }
-
-function buttonHover(e) {
-	e.className = "button_hover";
-}
-
-function buttonUnhover(e) {
-	e.className = "button";
-}
+function buttonHover(e) {e.className = "button_hover";}
+function buttonUnhover(e) {e.className = "button";}
+function sessionChoiceRenameHover(e, sessionRowIn) {sessionHover(sessionRowIn); e.className = "sessionChoiceRename_hover";}
+function sessionChoiceRenameUnhover(e, sessionRowIn) {e.className = "sessionChoiceRename"; sessionUnhover(sessionRowIn);}
+function sessionChoiceCopyHover(e, sessionRowIn) {sessionHover(sessionRowIn); e.className = "sessionChoiceCopy_hover";}
+function sessionChoiceCopyUnhover(e, sessionRowIn) {e.className = "sessionChoiceCopy"; sessionUnhover(sessionRowIn);}
+function sessionChoiceDeleteHover(e, sessionRowIn) {sessionHover(sessionRowIn); e.className = "sessionChoiceDelete_hover";}
+function sessionChoiceDeleteUnhover(e, sessionRowIn) {e.className = "sessionChoiceDelete"; sessionUnhover(sessionRowIn);}
 
 function selectSession(sessionName) {
 	fso.GetStandardStream(1).WriteLine(sessionName);
