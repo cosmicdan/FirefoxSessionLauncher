@@ -59,8 +59,10 @@ window.onload = function() {
 	guiSessionPrev.innerHTML += "</div>";
 	
 	// footer buttons
-	var guiFooter = document.getElementById("sessionLauncherGuiFooter");
-	guiFooter.innerHTML += "<div class='button' onmouseover=\"buttonHover(this)\" onmouseout=\"buttonUnhover(this)\" onclick='newSessionDialog()'>New...</div>";
+	var guiFooterLeft = document.getElementById("sessionLauncherGuiFooterLeft");
+	guiFooterLeft.innerHTML += "<div class='button' onmouseover=\"buttonHover(this)\" onmouseout=\"buttonUnhover(this)\" onclick='newSessionDialog()'>New...</div>";
+	var guiFooterRight = document.getElementById("sessionLauncherGuiFooterRight");
+	guiFooterRight.innerHTML += "<div class='button' onmouseover=\"buttonHover(this)\" onmouseout=\"buttonUnhover(this)\" onclick='aboutDialog()'>About</div>";
 	
 	// setup hover stuff
 	var sessionChoiceButtons = document.getElementsByName('sessionChoice');
@@ -80,6 +82,7 @@ window.onload = function() {
 	var percentageOfFooter = getElementHeight("sessionLauncherGuiFooter") / bodyHeight * 100;
 	guiSessionListContainer.style.height = 100 - percentageOfHeader - percentageOfFooter + "%";
 	var guiListFadeBottom = document.getElementById("sessionListFadeBottom");
+	var guiFooter = document.getElementById("sessionLauncherGuiFooter");
 	guiListFadeBottom.style.bottom = (guiFooter.clientHeight - 1);
 	
 	// make the scrollbar look thinner by extending the width a little
@@ -275,6 +278,22 @@ function showInputDialog(title, text, okButtonText, okFunctionName) {
 		//"<div class='button' onmouseover=\"buttonHover(this)\" onmouseout=\"buttonUnhover(this)\" onclick='" + okFunctionName + "()'>" + okButtonText + "</div>" +
 		"<div class='button' onmouseover=\"buttonHover(this)\" onmouseout=\"buttonUnhover(this)\" onclick='" + okFunctionName + "'>" + okButtonText + "</div>" +
 		"<div class='button' onmouseover=\"buttonHover(this)\" onmouseout=\"buttonUnhover(this)\" onclick='dialogCancel()'>Cancel</div>" +
+	"</div>";
+}
+
+function aboutDialog() {
+	var promptOverlay = document.getElementById("promptOverlay");
+	var promptBox = document.getElementById("promptBox");
+	promptOverlay.style.width = document.body.offsetWidth;
+	promptOverlay.style.height = document.body.offsetHeight;
+	promptBox.style.visibility = "visible";
+	promptBox.innerHTML =
+	"<h1>SessionLauncher</h1>" +
+	"<h3>By Daniel 'CosmicDan' Connolly</h3>" +
+	"<span id='aboutLink' onclick='new ActiveXObject(\"WScript.Shell\").run(\"https://www.github.com/cosmicdan/FirefoxSessionLauncher\")'>Visit github.com/cosmicdan/FirefoxSessionLauncher</span>" +
+	"<h3 style='padding-top: 2em;'>Icons thanks to <span id='icons8link' onclick='new ActiveXObject(\"WScript.Shell\").run(\"https://icons8.com\")'>Icons8.com</span></h3>" +
+	"<div id='promptButtonRow'>" +
+		"<div class='button' onmouseover=\"buttonHover(this)\" onmouseout=\"buttonUnhover(this)\" onclick='dialogCancel()'>OK</div>" +
 	"</div>";
 }
 

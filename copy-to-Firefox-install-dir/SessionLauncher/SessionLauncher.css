@@ -157,8 +157,20 @@ span.sessionChoiceDelete_hover { background: url("img/deleteHover.png") no-repea
 	/* height total = 15% */
 	height: 0;
 	margin: 0;
+	padding: 0;
+}
+
+#sessionLauncherGuiFooterLeft {
+	float: left;
+	/* height total = 15% */
+	margin: 0;
 	padding: 1em 2em 2em 2em;
-	
+}
+
+#sessionLauncherGuiFooterRight {
+	float: right;
+	margin: 0;
+	padding: 1em 1em 2em 2em;
 }
 
 .button, .button_hover {
@@ -199,6 +211,21 @@ span.sessionChoiceDelete_hover { background: url("img/deleteHover.png") no-repea
 	height: 35%;
 	left: 10%;
 	top: 30%;
+}
+
+#aboutLink {
+	height: 1.5em;
+	padding: 0;
+	margin: 0.5em 0 0 4%;
+	font-family: "Segoe UI Semibold";
+	text-align: left;
+	font-size: 10pt;
+	color: #ccc;
+	border-bottom: 1px #373737 solid;
+}
+
+#icons8link {
+	border-bottom: 1px #373737 solid;
 }
 
 input {
