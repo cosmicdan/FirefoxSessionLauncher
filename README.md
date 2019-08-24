@@ -4,6 +4,22 @@ Session Manager for classic Firefox hasn't been properly replicated, 'Tab Sessio
 
 So out of sheer frustration with Waterfox + Session Manager suffering from bitrot and performance issues, I decided to finally migrate to Firefox and just make myself the one thing that was missing - and so SessionLauncher was born.
 
-Leveraging the awesome power of Windows Batch and Internet Explorer HTA's (*cough*), I have made this Windows-only launcher that, by hooking the Firefox (ESR recommended) config.js system, uses a GUI to manage and launch a session early in the Firefox profile loading process. This results in a single profile session, sharing all data, except for the "session" (current tabs) which are categorized and managed yourself.
+Leveraging the awesome power of Windows Batch and Internet Explorer HTA's (*cough*), I have made this Windows-only (sad-face) launcher that, by hooking the Firefox (ESR recommended) config.js system, provides a GUI to launch a specific session by swapping files around early in the Firefox profile load (before the session is even read, thankfully). The end result is a single profile in Firefox still - sharing all data - except for the "session" (current tabs) which are provided by the launcher.
+
+In case it wasn't obvious - there is no need to ever manually save the session. Just ensure "Load last tabs" option is set in Firefox, and the Session Launcher will take care of the rest.
+
+## Demo
+
+*Yes, I tried to replicate Fluent Design in HTA (CSS1+JS) - oh how fun it was.*
+
+![SessionLauncher demo animation](demo.gif)
+
+## Installation
+
+NB: Firefox ESR is recommended rather than mainline releases as I have no idea if/when Mozilla will deprecate any of the stuff that SessionLauncher requires. Note that it does NOT require sandboxing to be disabled - it doesn't actually touch config at all, just leverages the same "hook" - so I don't believe there are any security concerns regarding SessionLauncher.
+
+To install, just download this repo, copy the contents of copy-to-Firefox-install-dir to your Firefox install directory, and run Firefox! A _Default profile will be created on first launch - this cannot be renamed or deleted and always appears at the top as a fallback. (Note that you can always edit the scripts yourself if you really want to change the _Default name).
+
+
 
 TODO: Credits (icons8.com, the guys where I got the config.js stuff from - it's in one of my Waterfox tabs somewhere...)
