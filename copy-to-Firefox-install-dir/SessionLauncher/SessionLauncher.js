@@ -155,23 +155,21 @@ function newSessionConfirm() {
 	var newSessionName = document.getElementById("promptinput").value;
 	if (newSessionName == null || newSessionName === "") {
 		// user cancelled or entered nothing
-		dialogCancel();
+		alertDialog("Cancelled", "Cannot create a session with no name.", 3);
 		return;
 	}
 	var newSessionPath = sessionLauncherStorageDir + "\\" + newSessionName;
 	if (alertSessionPathExists(newSessionName, newSessionPath)) {
-		dialogCancel();
 		return;
 	}
 	// try creating the folder
 	try {
 		fso.CreateFolder(newSessionPath);
+		location.reload(true);
 	}
 	catch (err) {
-		alert("Error creating session folder. Either the folder name is" + "\n" + 
-			"invalid (special characters) or a security exception occured.");
+		alertDialog("Error", "Error creating session folder. Either the folder name is invalid (special characters) or a security exception occured.");
 	}
-	location.reload(true);
 }
 
 function deleteSessionDialog(sessionNameIn) {
@@ -203,18 +201,16 @@ function copySessionConfirm(sessionNameIn) {
 	var oldSessionPath = sessionLauncherStorageDir + "\\" + sessionNameIn;
 	var newSessionPath = sessionLauncherStorageDir + "\\" + newSessionName;
 	if (alertSessionPathExists(newSessionName, newSessionPath)) {
-		dialogCancel();
 		return;
 	}
 	// try copying the folder
 	try {
 		fso.CopyFolder(oldSessionPath, newSessionPath);
+		location.reload(true);
 	}
 	catch (err) {
-		alert("Error copying session folder. Either the folder name is" + "\n" + 
-			"invalid (special characters) or a security exception occured.");
+		alertDialog("Error", "Error copying session folder. Either the folder name is invalid (special characters) or a security exception occured.");
 	}
-	location.reload(true);
 }
 
 function renameSessionDialog(sessionNameIn) {
@@ -231,38 +227,17 @@ function renameSessionConfirm(sessionNameIn) {
 	var oldSessionPath = sessionLauncherStorageDir + "\\" + sessionNameIn;
 	var newSessionPath = sessionLauncherStorageDir + "\\" + newSessionName;
 	if (alertSessionPathExists(newSessionName, newSessionPath)) {
-		dialogCancel();
 		return;
 	}
 	// try moving the folder
 	try {
 		fso.MoveFolder(oldSessionPath, newSessionPath);
+		location.reload(true);
 	}
 	catch (err) {
-		alert("Error copying session folder. Either the folder name is" + "\n" + 
-			  "invalid (special characters) or a security exception occured.");
+		alertDialog("Error", "Error copying session folder. Either the folder name is invalid (special characters) or a security exception occured.");
 	}
-	location.reload(true);
 }
-
-/*
-
-function sessionChoiceRename(sessionNameIn) {
-	var newSessionName = prompt("Rename '" + sessionNameIn + "' to:", "");
-	if (newSessionName == null || newSessionName === "") {
-		// user cancelled or entered nothing
-		return;
-	}
-	var oldSessionPath = sessionLauncherStorageDir + "\\" + sessionNameIn;
-	var newSessionPath = sessionLauncherStorageDir + "\\" + newSessionName;
-	if (alertSessionPathExists(newSessionName, newSessionPath)) {
-		return;
-	}
-	fso.MoveFolder(oldSessionPath, newSessionPath);
-	location.reload(true);
-}
-
-*/
 
 function showInputDialog(title, text, okButtonText, okFunctionName) {
 	var promptOverlay = document.getElementById("promptOverlay");
@@ -297,7 +272,50 @@ function aboutDialog() {
 	"</div>";
 }
 
+function alertDialog(alertTitle, alertText) {
+	alertDialog(alertTitle, alertText, 0);
+}
+
+var timeoutToGo;
+
+function alertDialog(alertTitle, alertText, timeout) {
+	var promptOverlay = document.getElementById("promptOverlay");
+	var promptBox = document.getElementById("promptBox");
+	promptOverlay.style.width = document.body.offsetWidth;
+	promptOverlay.style.height = document.body.offsetHeight;
+	promptBox.style.visibility = "visible";
+	promptBox.innerHTML =
+	"<h1>" + alertTitle + "</h1>" +
+	"<h3>" + alertText + "</h3>";
+	if (timeout > 0) {
+		promptBox.innerHTML += "<div id='promptButtonRow'>" +
+			"<h3 id='returnCountdown'>...<h3>" +
+		"</div>";
+		timeoutToGo = timeout;
+		window.setInterval(updateReturnCountdown, 1000);
+		updateReturnCountdown();
+		window.setTimeout(dialogCancel, timeout * 1000);
+	} else {
+		promptBox.innerHTML += "<div id='promptButtonRow'>" +
+			"<div class='button' onmouseover=\"buttonHover(this)\" onmouseout=\"buttonUnhover(this)\" onclick='dialogCancel()'>OK</div>" +
+		"</div>";
+	}
+}
+
+function updateReturnCountdown() {
+	var returnCountdown = document.getElementById("returnCountdown");
+	if (returnCountdown != null) {
+		document.getElementById("returnCountdown").innerHTML = "Returning in " + timeoutToGo + " seconds..."
+		timeoutToGo--;
+	} else {
+		timeoutToGo = 0;
+		window.clearInterval();
+	}
+}
+
 function dialogCancel() {
+	window.clearTimeout();
+	window.clearInterval();
 	var promptOverlay = document.getElementById("promptOverlay");
 	var promptBox = document.getElementById("promptBox");
 	promptBox.innerHTML = "";
@@ -309,8 +327,8 @@ function dialogCancel() {
 function alertSessionPathExists(newSessionNameIn, pathIn) {
 	if (fso.FolderExists(pathIn)) {
 		// session exists, cancel
-		alert("Session '" + newSessionNameIn + "' already exists. Cancelled.");
-		return;
+		alertDialog("Cancelled", "Session '" + newSessionNameIn + "' already exists. Cancelled.");
+		return true;
 	}
 }
 
