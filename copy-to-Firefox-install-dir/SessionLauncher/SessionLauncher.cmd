@@ -43,10 +43,21 @@ IF EXIST "%SESSIONLAUNCHER_DIR%\current_session" (
 	IF EXIST "%SESSIONLAUNCHER_STORAGE%\!LAST_SESSION!\" (
 		:: Move the current sessionstore back to the last-active session folder. TODO: Only automatically overwrite if newer, otherwise prompt
 		MOVE /Y "%MOZ_PROFILE_PATH%\sessionstore.jsonlz4" "%SESSIONLAUNCHER_STORAGE%\!LAST_SESSION!\">nul
-		CALL :LOG "    [i] sessionstore.jsonlz4 transferred back to !LAST_SESSION!"
+		:: Also move places.sqlite
+		MOVE /Y "%MOZ_PROFILE_PATH%\places.sqlite" "%SESSIONLAUNCHER_STORAGE%\!LAST_SESSION!\">nul
+		:: Delete lingering places.sqlite*
+		PUSHD "%MOZ_PROFILE_PATH%">nul
+		DEL /F /Q places.sqlite*>nul 2>&1
+		POPD>nul
+		CALL :LOG "    [i] sessionstore.jsonlz4 and places.sqlite transferred back to !LAST_SESSION!"
 	) ELSE (
 		:: Assume stale session
 		DEL /F /Q "%MOZ_PROFILE_PATH%\sessionstore.jsonlz4">nul
+		DEL /F /Q "%MOZ_PROFILE_PATH%\places.sqlite">nul
+		:: Delete lingering places.sqlite*
+		PUSHD "%MOZ_PROFILE_PATH%">nul
+		DEL /F /Q places.sqlite*>nul 2>&1
+		POPD>nul
 		CALL :LOG "    [i] current_session points to a session that no longer exists. Assuming stale and deleting."
 	)
 	:: Also check the sessionstore-backups directory
@@ -68,10 +79,18 @@ IF EXIST "%SESSIONLAUNCHER_DIR%\current_session" (
 		DEL /F /Q "%MOZ_PROFILE_PATH%\sessionstore.jsonlz4"
 		CALL :LOG "    [i] Deleted stale sessionstore.jsonlz4"
 	)
+	IF EXIST "%MOZ_PROFILE_PATH%\places.sqlite" (
+		DEL /F /Q "%MOZ_PROFILE_PATH%\places.sqlite"
+		CALL :LOG "    [i] Deleted stale places.sqlite"
+	)
 	IF EXIST "%MOZ_PROFILE_PATH%\sessionstore-backups\" (
 		RD /S /Q "%MOZ_PROFILE_PATH%\sessionstore-backups"
 		CALL :LOG "    [i] Deleted stale sessionstore-backups\"
 	)
+	:: Delete lingering places.sqlite*
+	PUSHD "%MOZ_PROFILE_PATH%">nul
+	DEL /F /Q places.sqlite*>nul 2>&1
+	POPD>nul
 )
 
 :: Load the menu
@@ -94,10 +113,18 @@ IF NOT EXIST "%SESSION_SELECTED_DIR%\" (
 :: Copy session file, if it exists
 IF EXIST "%SESSION_SELECTED_DIR%\sessionstore.jsonlz4" (
 	COPY /Y "%SESSION_SELECTED_DIR%\sessionstore.jsonlz4" "%MOZ_PROFILE_PATH%\"
-	CALL :LOG "    [i] Copied sessionstore.jsonlz to current profile directory"
+	CALL :LOG "    [i] Copied sessionstore.jsonlz4 to current profile directory"
 ) ELSE (
-	CALL :LOG "    [i] No sessionstore.jsonlz exists - assuming new session and continuing normally."
+	CALL :LOG "    [i] No sessionstore.jsonlz4 exists - assuming new session and continuing normally."
 )
+:: Copy places database, if it exists
+IF EXIST "%SESSION_SELECTED_DIR%\places.sqlite" (
+	COPY /Y "%SESSION_SELECTED_DIR%\places.sqlite" "%MOZ_PROFILE_PATH%\"
+	CALL :LOG "    [i] Copied places.sqlite to current profile directory"
+) ELSE (
+	CALL :LOG "    [i] No places.sqlite exists - assuming new session and continuing normally."
+)
+
 
 :: Create and/or link sessionstore-backups
 IF NOT EXIST "%SESSION_SELECTED_DIR%\sessionstore-backups\" (
