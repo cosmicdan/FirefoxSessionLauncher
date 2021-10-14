@@ -1,22 +1,15 @@
 // config.js
-
-const Cu = Components.utils;
-const debugMode = true;
+const debugMode = false;
 
 try {
-	Cu.import("resource://gre/modules/Services.jsm");
-	Cu.import("resource://gre/modules/FileUtils.jsm");
-
-	if (!Services.appinfo.inSafeMode) {
-		var env = Components.classes["@mozilla.org/process/environment;1"].getService(Components.interfaces.nsIEnvironment);
-		var shell = new FileUtils.File(env.get("COMSPEC"));
-		var args = ["/c", "%CD%\\SessionLauncher\\SessionLauncher.cmd", debugMode ? "debugMode" : ""];
-
-		var process = Components.classes["@mozilla.org/process/util;1"]
-								.createInstance(Components.interfaces.nsIProcess);
-		process.init(shell);
-		if (!debugMode)
-			process.startHidden = true;
-		process.run(true, args, args.length);
-	};
+	var proc = Components.classes["@mozilla.org/process/util;1"].createInstance(Components.interfaces.nsIProcess);
+	var file = Components.classes["@mozilla.org/file/local;1"].createInstance(Components.interfaces.nsIFile);	
+	var env = Components.classes["@mozilla.org/process/environment;1"].getService(Components.interfaces.nsIEnvironment);
+	
+	file.initWithPath(env.get("COMSPEC"));
+	proc.init(file);
+	var args = ["/c", "SessionLauncher\\SessionLauncher.cmd", debugMode ? "debugMode" : ""];
+	if (!debugMode)
+			proc.startHidden = true;
+	proc.run(true,args,args.length);
 } catch(e) {};

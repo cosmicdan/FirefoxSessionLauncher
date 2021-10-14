@@ -7,14 +7,5 @@
 !/*.md
 !/*.cmd
 !/*.gif
-!/copy-to-Firefox-install-dir/
-!/copy-to-Firefox-install-dir/SessionLauncher/
-!/copy-to-Firefox-install-dir/config.js
-
-# config-prefs.js too, but nothing else in that tree
-!/copy-to-Firefox-install-dir/defaults/
-/copy-to-Firefox-install-dir/defaults/*
-!/copy-to-Firefox-install-dir/defaults/pref/
-/copy-to-Firefox-install-dir/defaults/pref/*
-!/copy-to-Firefox-install-dir/defaults/pref/config-prefs.js
+!/copy-to-Firefox-install-dir
 
